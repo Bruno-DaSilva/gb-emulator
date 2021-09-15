@@ -36,6 +36,8 @@ public class Bus {
         }
         if (addr >= 0xFF40 && addr <= 0xFF45 || addr >= 0xFF47 && addr <= 0xFF4B) {
             // PPU
+            if (addr == 0xFF44)
+                return (byte) 0x90; // STUB
             return 0;
         }
         if (addr >= 0xFF80 && addr <= 0xFFEF) {
@@ -79,13 +81,13 @@ public class Bus {
         if (addr == 0xFF01) {
             // serial data
             serialData = value;
-            System.out.println("Writing SERIAL data... " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+//            System.out.println("Writing SERIAL data... " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr == 0xFF02) {
             // serial control
             if ((value & 0x80) == 0x80) {
                 System.err.print((char) (serialData & 0xFF));
             }
-            System.out.println("Writing SERIAL control... " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+//            System.out.println("Writing SERIAL control... " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr >= 0xFF04 && addr <= 0xFF07) {
             System.out.println("Writing to special TIMER address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr >= 0xFF10 && addr <= 0xFF14) {
