@@ -17,7 +17,7 @@ public class CPU {
     private DoubleRegister BC;
     private DoubleRegister SP;
 
-    private Register HL_memptr_placeholder;
+    private InstructionTarget8Bit HLMemoryPointer;
 
     private boolean z;
     private boolean n;
@@ -44,7 +44,7 @@ public class CPU {
         this.SP = new DoubleRegister(new Register((byte) 0x00), new Register((byte) 0x00));
         this.SP.setValue(0xFFFE);
 
-        this.HL_memptr_placeholder = new Register((byte) 0x00);
+        this.HLMemoryPointer = new RegisterMemoryAddress(HL, bus);
 
         initMemory();
     }
@@ -116,42 +116,27 @@ public class CPU {
             // NOP
         } else if (nextInstruction == (byte) 0x10) {
             // STOP (disable interrupts)
+            readNextByte();
             // TODO
-
         } else if ((nextInstruction & 0b11_000_111) == 0b00_000_110) {
             // 0b00xxx110
             // LD r1, n --- LD (HL), n
             byte xxx = (byte) ((nextInstruction & 0b00_111_000) >>> 3);
             byte value = readNextByte();
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+            xxxRegister.setValue(value);
 
-            if (xxxRegister == HL_memptr_placeholder) {
-                // LD (HL), n
-                int memoryLocation = HL.getValue();
-                bus.writeByteAt(memoryLocation, value);
-            } else {
-                xxxRegister.setValue(value);
-            }
         } else if ((nextInstruction & 0b11_000_000) == 0b01_000_000) {
             // LD r1, r2
             byte xxx = (byte) ((nextInstruction & 0b00_111_000) >> 3);
             byte yyy = (byte) (nextInstruction & 0b00_000_111);
 
-            Register xxxRegister = getRegisterFor(xxx);
-            Register yyyRegister = getRegisterFor(yyy);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit yyyRegister = getRegisterFor(yyy);
 
-
-            if (xxxRegister == HL_memptr_placeholder && yyyRegister == HL_memptr_placeholder) {
+            if (xxxRegister == HLMemoryPointer && yyyRegister == HLMemoryPointer) {
                 // HALT
                 // TODO
-            } else if (xxxRegister == HL_memptr_placeholder) {
-                // LD (HL), r2
-                int memoryLocation = HL.getValue();
-                bus.writeByteAt(memoryLocation, yyyRegister.getValue());
-            } else if (yyyRegister == HL_memptr_placeholder) {
-                // LD r1, (HL)
-                int memoryLocation = HL.getValue();
-                xxxRegister.setValue(bus.readByteAt(memoryLocation));
             } else {
                 // LD r1, r2
                 xxxRegister.setValue(yyyRegister.getValue());
@@ -160,57 +145,25 @@ public class CPU {
         } else if ((nextInstruction & 0b11_000_111) == 0b00_000_100) {
             // INC r1
             byte xxx = (byte) ((nextInstruction & 0b00_111_000) >>> 3);
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
-            if (xxxRegister == HL_memptr_placeholder) {
-                // INC (HL)
-                int memoryLocation = HL.getValue();
-                byte byteRead = bus.readByteAt(memoryLocation);
+            byte orig = xxxRegister.getValue();
+            xxxRegister.setValue((byte) (xxxRegister.getValue() + 1));
 
-                byte orig = byteRead;
-                byteRead += 1;
-
-                bus.writeByteAt(memoryLocation, byteRead);
-
-                z = byteRead == 0;
-                n = false;
-                h = (((orig & 0xf) + 0x1) & 0x10) == 0x10;
-            } else {
-                // INC r1
-                byte orig = xxxRegister.getValue();
-                xxxRegister.setValue((byte) (xxxRegister.getValue() + 1));
-
-                z = xxxRegister.getValue() == 0;
-                n = false;
-                h = (((orig & 0xf) + 0x1) & 0x10) == 0x10;
-            }
+            z = xxxRegister.getValue() == 0;
+            n = false;
+            h = (((orig & 0xf) + 0x1) & 0x10) == 0x10;
         } else if ((nextInstruction & 0b11_000_111) == 0b00_000_101) {
             // DEC r1
             byte xxx = (byte) ((nextInstruction & 0b00_111_000) >>> 3);
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
-            if (xxxRegister == HL_memptr_placeholder) {
-                // DEC (HL)
-                int memoryLocation = HL.getValue();
-                byte byteRead = bus.readByteAt(memoryLocation);
+            byte orig = xxxRegister.getValue();
+            xxxRegister.setValue((byte) (xxxRegister.getValue() - 1));
 
-                byte orig = byteRead;
-                byteRead -= 1;
-
-                bus.writeByteAt(memoryLocation, byteRead);
-
-                z = byteRead == 0;
-                n = true;
-                h = (((orig & 0xf) - 0x1) & 0x10) == 0x10;
-            } else {
-                // DEC r1
-                byte orig = xxxRegister.getValue();
-                xxxRegister.setValue((byte) (xxxRegister.getValue() - 1));
-
-                z = xxxRegister.getValue() == 0;
-                n = true;
-                h = (((orig & 0xf) - 0x1) & 0x10) == 0x10;
-            }
+            z = xxxRegister.getValue() == 0;
+            n = true;
+            h = (((orig & 0xf) - 0x1) & 0x10) == 0x10;
         } else if ((nextInstruction & 0b11_00_1111) == 0b00_00_0001) {
             // LD rr, nn
             byte xx = (byte) ((nextInstruction & 0b00_110_000) >>> 4);
@@ -281,7 +234,7 @@ public class CPU {
             byte xx = (byte) ((nextInstruction & 0b00_11_0000) >>> 4);
             if (xx == 0b11) {
                 // POP AF
-                Register higherRegister = A;
+                InstructionTarget8Bit higherRegister = A;
 
                 writeRegisterF(bus.readByteAt(SP.getValue()));
                 SP.setValue(SP.getValue() + 1);
@@ -303,7 +256,7 @@ public class CPU {
             byte xx = (byte) ((nextInstruction & 0b00_11_0000) >>> 4);
             if (xx == 0b11) {
                 // PUSH AF
-                Register higherRegister = A;
+                InstructionTarget8Bit higherRegister = A;
 
                 SP.setValue(SP.getValue() - 1);
                 bus.writeByteAt(SP.getValue(), higherRegister.getValue());
@@ -323,18 +276,10 @@ public class CPU {
         } else if ((nextInstruction & 0b11111_000) == 0b10000_000) {
             // ADD A, r
             byte xxx = (byte) (nextInstruction & 0b00000_111);
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
-            byte orig;
-            byte toAdd;
-
-            if (xxxRegister == HL_memptr_placeholder) {
-                orig = A.getValue();
-                toAdd = bus.readByteAt(HL.getValue());
-            } else {
-                orig = A.getValue();
-                toAdd = xxxRegister.getValue();
-            }
+            byte orig = A.getValue();
+            byte toAdd = xxxRegister.getValue();
 
             A.setValue((byte) ((orig & 0xFF) + (toAdd & 0xFF)));
 
@@ -345,18 +290,10 @@ public class CPU {
         } else if ((nextInstruction & 0b11111_000) == 0b10010_000) {
             // SUB A, r
             byte xxx = (byte) (nextInstruction & 0b00000_111);
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
-            byte orig;
-            byte toSub;
-
-            if (xxxRegister == HL_memptr_placeholder) {
-                orig = A.getValue();
-                toSub = bus.readByteAt(HL.getValue());
-            } else {
-                orig = A.getValue();
-                toSub = xxxRegister.getValue();
-            }
+            byte orig = A.getValue();
+            byte toSub = xxxRegister.getValue();
 
             A.setValue((byte) ((orig & 0xFF) - (toSub & 0xFF)));
 
@@ -367,18 +304,10 @@ public class CPU {
         } else if ((nextInstruction & 0b11111_000) == 0b10100_000) {
             // AND A, r
             byte xxx = (byte) (nextInstruction & 0b00000_111);
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
-            byte orig;
-            byte toAnd;
-
-            if (xxxRegister == HL_memptr_placeholder) {
-                orig = A.getValue();
-                toAnd = bus.readByteAt(HL.getValue());
-            } else {
-                orig = A.getValue();
-                toAnd = xxxRegister.getValue();
-            }
+            byte orig = A.getValue();
+            byte toAnd = xxxRegister.getValue();
 
             A.setValue((byte) (orig & toAnd));
 
@@ -389,18 +318,10 @@ public class CPU {
         } else if ((nextInstruction & 0b11111_000) == 0b10110_000) {
             // OR A, r
             byte xxx = (byte) (nextInstruction & 0b00000_111);
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
-            byte orig;
-            byte toOr;
-
-            if (xxxRegister == HL_memptr_placeholder) {
-                orig = A.getValue();
-                toOr = bus.readByteAt(HL.getValue());
-            } else {
-                orig = A.getValue();
-                toOr = xxxRegister.getValue();
-            }
+            byte orig = A.getValue();
+            byte toOr = xxxRegister.getValue();
 
             A.setValue((byte) (orig | toOr));
 
@@ -411,19 +332,11 @@ public class CPU {
         } else if ((nextInstruction & 0b11111_000) == 0b10001_000) {
             // ADC A, r
             byte xxx = (byte) (nextInstruction & 0b00000_111);
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
-            byte orig;
-            byte toAdd;
+            byte orig = A.getValue();
+            byte toAdd = xxxRegister.getValue();
             int carry = c ? 1 : 0;
-
-            if (xxxRegister == HL_memptr_placeholder) {
-                orig = A.getValue();
-                toAdd = bus.readByteAt(HL.getValue());
-            } else {
-                orig = A.getValue();
-                toAdd = xxxRegister.getValue();
-            }
 
             A.setValue((byte) ((orig & 0xFF) + (toAdd & 0xFF) + carry));
 
@@ -434,19 +347,11 @@ public class CPU {
         } else if ((nextInstruction & 0b11111_000) == 0b10011_000) {
             // SBC A, r
             byte xxx = (byte) (nextInstruction & 0b00000_111);
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
-            byte orig;
-            byte toSub;
+            byte orig = A.getValue();
+            byte toSub = xxxRegister.getValue();
             int carry = c ? 1 : 0;
-
-            if (xxxRegister == HL_memptr_placeholder) {
-                orig = A.getValue();
-                toSub = bus.readByteAt(HL.getValue());
-            } else {
-                orig = A.getValue();
-                toSub = xxxRegister.getValue();
-            }
 
             A.setValue((byte) ((orig & 0xFF) - (toSub & 0xFF) - carry));
 
@@ -457,20 +362,12 @@ public class CPU {
         } else if ((nextInstruction & 0b11111_000) == 0b10101_000) {
             // XOR A, r
             byte xxx = (byte) (nextInstruction & 0b00000_111);
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
-            byte orig;
-            byte toAnd;
+            byte orig = A.getValue();
+            byte toXOR = xxxRegister.getValue();
 
-            if (xxxRegister == HL_memptr_placeholder) {
-                orig = A.getValue();
-                toAnd = bus.readByteAt(HL.getValue());
-            } else {
-                orig = A.getValue();
-                toAnd = xxxRegister.getValue();
-            }
-
-            A.setValue((byte) (orig ^ toAnd));
+            A.setValue((byte) (orig ^ toXOR));
 
             z = A.getValue() == 0;
             n = false;
@@ -479,18 +376,10 @@ public class CPU {
         } else if ((nextInstruction & 0b11111_000) == 0b10111_000) {
             // CP A, r
             byte xxx = (byte) (nextInstruction & 0b00000_111);
-            Register xxxRegister = getRegisterFor(xxx);
+            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
-            byte orig;
-            byte toSub;
-
-            if (xxxRegister == HL_memptr_placeholder) {
-                orig = A.getValue();
-                toSub = bus.readByteAt(HL.getValue());
-            } else {
-                orig = A.getValue();
-                toSub = xxxRegister.getValue();
-            }
+            byte orig = A.getValue();
+            byte toSub = xxxRegister.getValue();
 
             byte value = (byte) ((orig & 0xFF) - (toSub & 0xFF));
 
@@ -507,7 +396,7 @@ public class CPU {
             HL.setValue(orig + toAdd);
 
             n = false;
-            h = (((orig & 0xFFFF) + (toAdd & 0xFFFF)) & 0b0001_0000_0000_0000) == 0b0001_0000_0000_0000;
+            h = (((orig & 0x0FFF) + (toAdd & 0x0FFF)) & 0b0001_0000_0000_0000) == 0b0001_0000_0000_0000;
             c = ((orig & 0xFFFF) + (toAdd & 0xFFFF)) > 0xFFFF;
         } else if ((nextInstruction & 0b111_00_111) == 0b110_00_000) {
             // RET cond
@@ -550,7 +439,20 @@ public class CPU {
                 bus.writeByteAt(SP.getValue(), lowerPC);
                 pc = targetAddr;
             }
+        } else if ((nextInstruction & 0b11_000_111) == 0b11_000_111) {
+            // RST i
+            byte iii = (byte) (nextInstruction & 0b00_111_000);
+            // push current pc onto the stack
+            int currentPC = pc;
+            byte lowerPC = (byte) (currentPC & 0xFF);
+            byte higherPC = (byte) ((currentPC >> 8) & 0xFF);
+            SP.setValue(SP.getValue() - 1);
+            bus.writeByteAt(SP.getValue(), higherPC);
+            SP.setValue(SP.getValue() - 1);
+            bus.writeByteAt(SP.getValue(), lowerPC);
 
+            // set pc to page i of memory
+            pc = iii;
 
 
         } else if (nextInstruction == (byte) 0x20) {
@@ -674,54 +576,128 @@ public class CPU {
         } else if (nextInstruction == (byte) 0xCB) {
             // 16 bit opcode....
             nextInstruction = readNextByte();
-            if (nextInstruction == (byte) 0x38) {
-                // SRL B
-                byte orig = B.getValue();
-                B.setValue((byte) ((B.getValue() & 0xFF) >>> 1));
-                z = B.getValue() == 0;
+            if ((nextInstruction & 0b11111_000) == 0b00000_000) {
+                // RLC r
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+                byte orig = xxxRegister.getValue();
+                int msb = orig & 0x80;
+                xxxRegister.setValue((byte) ((orig & 0xFF) << 1));
+                xxxRegister.setValue((byte) (xxxRegister.getValue() | (msb >>> 7)));
+                z = xxxRegister.getValue() == 0;
                 n = false;
                 h = false;
-                c = (orig & 0x01) == 0x01;
-            } else if (nextInstruction == (byte) 0x19) {
-                // RR C
+                c = msb == 0x80;
+            } else if ((nextInstruction & 0b11111_000) == 0b00001_000) {
+                // RRC r
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+                byte orig = xxxRegister.getValue();
+                int lsb = orig & 0x01;
+                xxxRegister.setValue((byte) ((orig & 0xFF) >>> 1));
+                xxxRegister.setValue((byte) (xxxRegister.getValue() | (lsb << 7)));
+                z = xxxRegister.getValue() == 0;
+                n = false;
+                h = false;
+                c = lsb == 0x01;
+            } else if ((nextInstruction & 0b11111_000) == 0b00010_000) {
+                // RL r
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+                byte orig = xxxRegister.getValue();
+                int carry = c ? 1 : 0;
+                xxxRegister.setValue((byte) ((orig & 0xFF) << 1));
+                xxxRegister.setValue((byte) (xxxRegister.getValue() | carry));
+                z = xxxRegister.getValue() == 0;
+                n = false;
+                h = false;
+                c = (orig & 0x80) == 0x80;
+            } else if ((nextInstruction & 0b11111_000) == 0b00011_000) {
+                // RR r
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
                 byte msb = (byte) ((c ? 1 : 0) << 7);
-                byte orig = C.getValue();
-                C.setValue((byte) ((C.getValue() & 0xFF) >>> 1));
-                C.setValue((byte) (C.getValue() | msb));
-                z = C.getValue() == 0;
+                byte orig = xxxRegister.getValue();
+                xxxRegister.setValue((byte) ((xxxRegister.getValue() & 0xFF) >>> 1));
+                xxxRegister.setValue((byte) (xxxRegister.getValue() | msb));
+                z = xxxRegister.getValue() == 0;
                 n = false;
                 h = false;
                 c = (orig & 0x01) == 0x01;
-            } else if (nextInstruction == (byte) 0x1A) {
-                // RR D
-                byte msb = (byte) ((c ? 1 : 0) << 7);
-                byte orig = D.getValue();
-                D.setValue((byte) ((D.getValue() & 0xFF) >>> 1));
-                D.setValue((byte) (D.getValue() | msb));
-                z = D.getValue() == 0;
+            } else if ((nextInstruction & 0b11111_000) == 0b00100_000) {
+                // SLA r
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+                byte orig = xxxRegister.getValue();
+                xxxRegister.setValue((byte) ((orig & 0xFF) << 1));
+                z = xxxRegister.getValue() == 0;
+                n = false;
+                h = false;
+                c = (orig & 0x80) == 0x80;
+            } else if ((nextInstruction & 0b11111_000) == 0b00101_000) {
+                // SRA r
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+                byte orig = xxxRegister.getValue();
+                int msb = orig & 0x80;
+                xxxRegister.setValue((byte) ((orig & 0xFF) >>> 1));
+                xxxRegister.setValue((byte) (xxxRegister.getValue() | msb));
+                z = xxxRegister.getValue() == 0;
                 n = false;
                 h = false;
                 c = (orig & 0x01) == 0x01;
-            } else if (nextInstruction == (byte) 0x1B) {
-                // RR E
-                byte msb = (byte) ((c ? 1 : 0) << 7);
-                byte orig = E.getValue();
-                E.setValue((byte) ((E.getValue() & 0xFF) >>> 1));
-                E.setValue((byte) (E.getValue() | msb));
-                z = E.getValue() == 0;
-                n = false;
-                h = false;
-                c = (orig & 0x01) == 0x01;
-            } else if (nextInstruction == (byte) 0x37) {
-                // SWAP A
-                byte lower4 = (byte) (A.getValue() & 0x0F);
-                byte higher4 = (byte) ((A.getValue() & 0xF0));
-                A.setValue((byte) ((lower4 << 4) | (higher4 >>> 4)));
+            } else if ((nextInstruction & 0b11111_000) == 0b00110_000) {
+                // SWAP r
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+                byte lower4  = (byte) ((xxxRegister.getValue() <<  4) & 0xF0);
+                byte higher4 = (byte) ((xxxRegister.getValue() >>> 4) & 0x0F);
+                xxxRegister.setValue((byte) (lower4 | higher4));
 
-                z = A.getValue() == 0;
+                z = xxxRegister.getValue() == 0;
                 n = false;
                 h = false;
                 c = false;
+            } else if ((nextInstruction & 0b11111_000) == 0b00111_000) {
+                // SRL r
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+                byte orig = xxxRegister.getValue();
+                xxxRegister.setValue((byte) ((orig & 0xFF) >>> 1));
+                z = xxxRegister.getValue() == 0;
+                n = false;
+                h = false;
+                c = (orig & 0x01) == 0x01;
+            } else if ((nextInstruction & 0b11_000_000) == 0b01_000_000) {
+                // BIT i, r
+                byte iii = (byte) ((nextInstruction & 0b00_111_000) >>> 3);
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+
+                z = (xxxRegister.getValue() & (0x01 << iii)) >>> iii == 0x00;
+                n = false;
+                h = true;
+            } else if ((nextInstruction & 0b11_000_000) == 0b10_000_000) {
+                // RES i, r
+                byte iii = (byte) ((nextInstruction & 0b00_111_000) >>> 3);
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+
+                int targetBit = (0x01 << iii);
+                int orig = xxxRegister.getValue() & 0xFF;
+
+                xxxRegister.setValue((byte) (orig & ~targetBit));
+            } else if ((nextInstruction & 0b11_000_000) == 0b11_000_000) {
+                // SET i, r
+                byte iii = (byte) ((nextInstruction & 0b00_111_000) >>> 3);
+                byte xxx = (byte) (nextInstruction & 0b00000_111);
+                InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
+
+                int targetBit = (0x01 << iii);
+                int orig = xxxRegister.getValue() & 0xFF;
+
+                xxxRegister.setValue((byte) (orig | targetBit));
+
             } else {
                 System.out.println("Received 16 bit instruction 0xCB" + String.format("%02X", nextInstruction));
                 throw new IndexOutOfBoundsException("Received invalid instruction for 16bit: " + String.format("0x%02X", nextInstruction));
@@ -830,6 +806,83 @@ public class CPU {
             n = false;
             h = false;
             c = lsb == 0x01;
+        } else if (nextInstruction == (byte) 0x08) {
+            // LD (nn), SP
+            Register lowerRegister = SP.getLowerRegister();
+            Register higherRegister = SP.getHigherRegister();
+
+            byte lowerBits = readNextByte();
+            byte higherBits = readNextByte();
+            int targetAddr = (higherBits & 0xFF) << 8 | (lowerBits & 0xFF);
+
+            bus.writeByteAt(targetAddr, lowerRegister.getValue());
+            bus.writeByteAt(targetAddr+1, higherRegister.getValue());
+        } else if (nextInstruction == (byte) 0xF9) {
+            // LD SP, HL
+            SP.setValue(HL.getValue());
+        } else if (nextInstruction == (byte) 0xE8) {
+            // ADD SP, s8
+            byte value = readNextByte();
+            int orig = SP.getValue();
+            SP.setValue(value + orig);
+
+            // TODO half and full carry
+            z = false;
+            n = false;
+            h = (((orig & 0xF) + (value & 0xF)) & 0x10) == 0x10;
+            c = (((orig & 0xFF) + (value & 0xFF)) & 0x100) == 0x100;
+        } else if (nextInstruction == (byte) 0xF8) {
+            // LD HL, SP+s8
+            byte value = readNextByte();
+            int orig = SP.getValue();
+            HL.setValue(value + orig);
+
+            // TODO half and full carry
+            z = false;
+            n = false;
+            h = (((orig & 0xF) + (value & 0xF)) & 0x10) == 0x10;
+            c = (((orig & 0xFF) + (value & 0xFF)) & 0x100) == 0x100;
+        } else if (nextInstruction == (byte) 0xF2) {
+            // LD A, (C)
+            byte higher = (byte) 0xFF;
+            byte lower = C.getValue();
+            int targetAddr = (higher & 0xFF) << 8 | (lower & 0xFF);
+
+            A.setValue(bus.readByteAt(targetAddr));
+        } else if (nextInstruction == (byte) 0xE2) {
+            // LD (C), A
+            byte higher = (byte) 0xFF;
+            byte lower = C.getValue();
+            int targetAddr = (higher & 0xFF) << 8 | (lower & 0xFF);
+
+            bus.writeByteAt(targetAddr, A.getValue());
+        } else if (nextInstruction == (byte) 0x27) {
+            // DAA
+            byte value = A.getValue();
+            byte correction = 0x00;
+            if (h || (!n && (value & 0x0F) > 9)) {
+                correction = 0x06;
+            }
+
+            if (c || (!n && (value & 0xFF) > 0x99)) {
+                correction |= 0x60;
+                c = true;
+            }
+
+            value = (byte) ((value & 0xFF) + (n ? -correction : correction));
+            A.setValue(value);
+            z = value == 0;
+            h = false;
+        } else if (nextInstruction == (byte) 0xD9) {
+            // RETI TODO interrupt return
+            byte lower = bus.readByteAt(SP.getValue());
+            SP.setValue(SP.getValue() + 1);
+            byte higher = bus.readByteAt(SP.getValue());
+            SP.setValue(SP.getValue() + 1);
+            pc = (higher & 0xFF) << 8 | (lower & 0xFF);
+        } else if (nextInstruction == (byte) 0xFB) {
+            // EI
+            // TODO
         } else {
             System.out.println("Received invalid instruction: " + String.format("0x%02X", nextInstruction));
             throw new IndexOutOfBoundsException("Received invalid instruction: " + String.format("0x%02X", nextInstruction));
@@ -868,7 +921,7 @@ public class CPU {
         }
     }
 
-    private Register getRegisterFor(byte xxx) {
+    private InstructionTarget8Bit getRegisterFor(byte xxx) {
         if (xxx == 0b000) {
             return B;
         } else if (xxx == 0b001) {
@@ -882,7 +935,7 @@ public class CPU {
         } else if (xxx == 0b101) {
             return L;
         } else if (xxx == 0b110) {
-            return HL_memptr_placeholder;
+            return HLMemoryPointer;
         } else if (xxx == 0b111) {
             return A;
         } else {

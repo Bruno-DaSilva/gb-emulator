@@ -1,6 +1,6 @@
 package emulator;
 
-public class Register {
+public class Register implements InstructionTarget8Bit {
     private byte value;
 
     public Register(byte value) {
