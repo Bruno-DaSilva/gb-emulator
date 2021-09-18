@@ -1,4 +1,4 @@
-package emulator;
+package emulator.cpu;
 
 public interface InstructionTarget8Bit {
     byte getValue();

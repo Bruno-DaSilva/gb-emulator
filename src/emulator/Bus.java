@@ -7,22 +7,22 @@ public class Bus {
     // C000 - CFFF work ram
     // D000 - DFFF work ram
 
-    private ROM rom;
+    private Cartridge cartridge;
     private WRAM wram1;
     private WRAM wram2;
     private HRAM hram;
     private byte serialData;
 
-    public Bus(ROM rom) {
+    public Bus(Cartridge cartridge) {
         this.wram1 = new WRAM();
         this.wram2 = new WRAM();
         this.hram = new HRAM();
-        this.rom = rom;
+        this.cartridge = cartridge;
     }
 
     public byte readByteAt(int addr) {
         if (addr < 0x8000) {
-            return rom.readByteAt(addr);
+            return cartridge.readByteAt(addr);
         }
         if (addr >= 0xC000 && addr < 0xD000) {
             return wram1.readByteAt(addr - 0xC000);
@@ -43,11 +43,16 @@ public class Bus {
         if (addr >= 0xFF80 && addr <= 0xFFEF) {
             return hram.readByteAt(addr - 0xFF80);
         }
+        if (addr == 0xFF4D) {
+            return (byte) 0xFF;
+        }
         throw new IndexOutOfBoundsException("address " + String.format("0x%02X%n", addr) + "cannot be read from");
     }
     public void writeByteAt(int addr, byte value) {
-        if (addr < 0x8000) {
-            throw new IllegalArgumentException("Cannot write to ROM at address " + String.format("0x%02X%n", addr) + " with value " + String.format("0x%02X%n", value));
+        if (addr < 0x8000 || (addr >= 0xA000 && addr < 0xC000)) {
+//            throw new IllegalArgumentException("Cannot write to ROM at address " + String.format("0x%02X%n", addr) + " with value " + String.format("0x%02X%n", value));
+            cartridge.writeByteAt(addr, value);
+            return;
         }
         if (addr >= 0xC000 && addr < 0xD000) {
             wram1.writeByteAt(addr - 0xC000, value);
@@ -89,19 +94,19 @@ public class Bus {
             }
 //            System.out.println("Writing SERIAL control... " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr >= 0xFF04 && addr <= 0xFF07) {
-            System.out.println("Writing to special TIMER address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+//            System.out.println("Writing to special TIMER address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr >= 0xFF10 && addr <= 0xFF14) {
-            System.out.println("Writing to special SOUND address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+//            System.out.println("Writing to special SOUND address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr >= 0xFF16 && addr <= 0xFF1E) {
-            System.out.println("Writing to special SOUND address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+//            System.out.println("Writing to special SOUND address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr >= 0xFF20 && addr <= 0xFF26) {
-            System.out.println("Writing to special SOUND address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+//            System.out.println("Writing to special SOUND address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr >= 0xFF30 && addr <= 0xFF3F) {
-            System.out.println("Writing to special SOUND address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+//            System.out.println("Writing to special SOUND address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr == 0xFF0F) {
-            System.out.println("Writing to special Interrupt Flag address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+//            System.out.println("Writing to special Interrupt Flag address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr == 0xFFFF) {
-            System.out.println("Writing to special Interrupt Enable address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+//            System.out.println("Writing to special Interrupt Enable address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else {
             throw new IndexOutOfBoundsException("address " + String.format("0x%02X%n", addr) + "cannot be written to");
         }

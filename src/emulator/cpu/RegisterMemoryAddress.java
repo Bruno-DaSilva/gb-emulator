@@ -1,4 +1,6 @@
-package emulator;
+package emulator.cpu;
+
+import emulator.Bus;
 
 public class RegisterMemoryAddress implements InstructionTarget8Bit {
     private Bus bus;

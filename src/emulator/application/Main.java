@@ -1,11 +1,10 @@
 package emulator.application;
 import emulator.Bus;
-import emulator.CPU;
-import emulator.ROM;
+import emulator.Cartridge;
+import emulator.cpu.CPU;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -24,9 +23,8 @@ public class Main {
 //        File romFile = new File("src/emulator/application/tests/individual/10-bit ops.gb");
 //        File romFile = new File("src/emulator/application/tests/individual/11-op a,(hl).gb");
         File romFile = new File("src/emulator/application/tests/cpu_instrs.gb");
-        byte[] romBytes = Files.readAllBytes(romFile.toPath());
 
-        ROM rom = new ROM(romBytes);
+        Cartridge rom = new Cartridge(romFile);
         Bus bus = new Bus(rom);
         CPU cpu = new CPU(bus);
 

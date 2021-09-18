@@ -1,4 +1,4 @@
-package emulator;
+package emulator.cpu;
 
 public class Register implements InstructionTarget8Bit {
     private byte value;
