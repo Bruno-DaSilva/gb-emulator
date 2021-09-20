@@ -1,6 +1,8 @@
 package emulator.application;
 import emulator.Bus;
 import emulator.Cartridge;
+import emulator.InterruptController;
+import emulator.Timer;
 import emulator.cpu.CPU;
 
 import java.io.File;
@@ -25,14 +27,17 @@ public class Main {
         File romFile = new File("src/emulator/application/tests/cpu_instrs.gb");
 
         Cartridge rom = new Cartridge(romFile);
-        Bus bus = new Bus(rom);
-        CPU cpu = new CPU(bus);
+        InterruptController interruptController = new InterruptController();
+        Timer timer = new Timer(interruptController);
+        Bus bus = new Bus(rom, interruptController, timer);
+        CPU cpu = new CPU(bus, interruptController);
 
         int maxCycles = Integer.MAX_VALUE;
         int currCycle = 0;
         while(currCycle++ < maxCycles) {
-//            System.out.printf("%d: \n", currCycle);
-            cpu.executeNext();
+            int numCycles = cpu.executeNext();
+            numCycles += cpu.checkInterrupts();
+            timer.addCycles(numCycles*4);
         }
     }
 }

@@ -12,8 +12,12 @@ public class Bus {
     private WRAM wram2;
     private HRAM hram;
     private byte serialData;
+    private InterruptController interruptController;
+    private Timer timer;
 
-    public Bus(Cartridge cartridge) {
+    public Bus(Cartridge cartridge, InterruptController interruptController, Timer timer) {
+        this.interruptController = interruptController;
+        this.timer = timer;
         this.wram1 = new WRAM();
         this.wram2 = new WRAM();
         this.hram = new HRAM();
@@ -45,6 +49,21 @@ public class Bus {
         }
         if (addr == 0xFF4D) {
             return (byte) 0xFF;
+        }
+        if (addr == 0xFF0F) {
+            return interruptController.getInterruptFlag();
+        }
+        if (addr == 0xFF05) {
+            // TIMA
+            return timer.getTIMA();
+        }
+        if (addr == 0xFF06) {
+            // TMA
+            return timer.getTMA();
+        }
+        if (addr == 0xFF07) {
+            // TAC
+            return timer.getTAC();
         }
         throw new IndexOutOfBoundsException("address " + String.format("0x%02X%n", addr) + "cannot be read from");
     }
@@ -93,8 +112,17 @@ public class Bus {
                 System.err.print((char) (serialData & 0xFF));
             }
 //            System.out.println("Writing SERIAL control... " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
-        } else if (addr >= 0xFF04 && addr <= 0xFF07) {
-//            System.out.println("Writing to special TIMER address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+        } else if (addr == 0xFF04) {
+//            System.out.println("Writing to special DIV address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+        } else if (addr == 0xFF05) {
+//            System.out.println("Writing to TIMER TIMA address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+            timer.setTIMA(value);
+        } else if (addr == 0xFF06) {
+//            System.out.println("Writing to TIMER TMA address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+            timer.setTMA(value);
+        } else if (addr == 0xFF07) {
+//            System.out.println("Writing to TIMER TAC " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+            timer.setTAC(value);
         } else if (addr >= 0xFF10 && addr <= 0xFF14) {
 //            System.out.println("Writing to special SOUND address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr >= 0xFF16 && addr <= 0xFF1E) {
@@ -105,8 +133,10 @@ public class Bus {
 //            System.out.println("Writing to special SOUND address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr == 0xFF0F) {
 //            System.out.println("Writing to special Interrupt Flag address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+            interruptController.setInterruptFlag(value);
         } else if (addr == 0xFFFF) {
 //            System.out.println("Writing to special Interrupt Enable address " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
+            interruptController.setInterruptEnable(value);
         } else {
             throw new IndexOutOfBoundsException("address " + String.format("0x%02X%n", addr) + "cannot be written to");
         }

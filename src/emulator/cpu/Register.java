@@ -14,4 +14,9 @@ public class Register implements InstructionTarget8Bit {
     public void setValue(byte value) {
         this.value = value;
     }
+
+    @Override
+    public int getAccessCost() {
+        return 0;
+    }
 }

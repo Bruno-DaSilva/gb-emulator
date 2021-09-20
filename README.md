@@ -6,7 +6,9 @@
   * Implement bugs?
 * ###Cartridge
   * Refactor interface 
-  * Implement MBC1
+  * ~~Implement MBC1~~
+  * Implement MBC1 RAM switching
+  * Refactor Cartridge/MBC1
   * Implement MBC3
   * Implement MBC5? (GBC)
   * Implement RAM banking

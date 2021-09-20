@@ -20,4 +20,9 @@ public class RegisterMemoryAddress implements InstructionTarget8Bit {
     public void setValue(byte value) {
         bus.writeByteAt(addressRegister.getValue(), value);
     }
+
+    @Override
+    public int getAccessCost() {
+        return 1;
+    }
 }

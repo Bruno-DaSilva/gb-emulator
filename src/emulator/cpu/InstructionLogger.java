@@ -18,17 +18,17 @@ public class InstructionLogger {
         nextFourInstructions[1] = bus.readByteAt(PC+1);
         nextFourInstructions[2] = bus.readByteAt(PC+2);
         nextFourInstructions[3] = bus.readByteAt(PC+3);
-//        String logString = String.format(
-//                "A: %02X F: %02X B: %02X C: %02X D: %02X E: %02X H: %02X L: %02X SP: %04X PC: 00:%04X (%02X %02X %02X %02X)",
-//                A.getValue(), F, B.getValue(), C.getValue(), D.getValue(), E.getValue(), H.getValue(), L.getValue(),
-//                SP.getValue(), PC, nextFourInstructions[0], nextFourInstructions[1], nextFourInstructions[2], nextFourInstructions[3]
-//        );
         String logString = String.format(
-                "%04X:  %02X  A:%02X B:%02X C:%02X D:%02X E:%02X F:%02X H:%02X L:%02X SP:%04X",
-                PC, nextFourInstructions[0],
-                A.getValue(), B.getValue(), C.getValue(), D.getValue(), E.getValue(), F, H.getValue(), L.getValue(),
-                SP.getValue()
+                "A: %02X F: %02X B: %02X C: %02X D: %02X E: %02X H: %02X L: %02X SP: %04X PC: 00:%04X (%02X %02X %02X %02X)",
+                A.getValue(), F, B.getValue(), C.getValue(), D.getValue(), E.getValue(), H.getValue(), L.getValue(),
+                SP.getValue(), PC, nextFourInstructions[0], nextFourInstructions[1], nextFourInstructions[2], nextFourInstructions[3]
         );
+//        String logString = String.format(
+//                "%04X:  %02X  A:%02X B:%02X C:%02X D:%02X E:%02X F:%02X H:%02X L:%02X SP:%04X",
+//                PC, nextFourInstructions[0],
+//                A.getValue(), B.getValue(), C.getValue(), D.getValue(), E.getValue(), F, H.getValue(), L.getValue(),
+//                SP.getValue()
+//        );
         logger.info(logString);
     }
 
