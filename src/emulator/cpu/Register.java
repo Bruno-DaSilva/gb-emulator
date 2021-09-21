@@ -1,7 +1,7 @@
 package emulator.cpu;
 
 public class Register implements InstructionTarget8Bit {
-    private byte value;
+    protected byte value;
 
     public Register(byte value) {
         this.value = value;

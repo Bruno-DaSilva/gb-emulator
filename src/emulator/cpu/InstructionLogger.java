@@ -10,18 +10,18 @@ import java.util.logging.Logger;
 public class InstructionLogger {
     private static Logger staticLogger;
 
-    public static void logInstruction(Register A, byte F, Register B, Register C, Register D, Register E, Register H, Register L, DoubleRegister SP, int PC, Bus bus) {
+    public static void logInstruction(Register A, Register F, Register B, Register C, Register D, Register E, Register H, Register L, DoubleRegister SP, DoubleRegister PC, Bus bus) {
 
         Logger logger = getLogger();
         byte[] nextFourInstructions = new byte[4];
-        nextFourInstructions[0] = bus.readByteAt(PC);
-        nextFourInstructions[1] = bus.readByteAt(PC+1);
-        nextFourInstructions[2] = bus.readByteAt(PC+2);
-        nextFourInstructions[3] = bus.readByteAt(PC+3);
+        nextFourInstructions[0] = bus.readByteAt(PC.getValue());
+        nextFourInstructions[1] = bus.readByteAt(PC.getValue()+1);
+        nextFourInstructions[2] = bus.readByteAt(PC.getValue()+2);
+        nextFourInstructions[3] = bus.readByteAt(PC.getValue()+3);
         String logString = String.format(
                 "A: %02X F: %02X B: %02X C: %02X D: %02X E: %02X H: %02X L: %02X SP: %04X PC: 00:%04X (%02X %02X %02X %02X)",
-                A.getValue(), F, B.getValue(), C.getValue(), D.getValue(), E.getValue(), H.getValue(), L.getValue(),
-                SP.getValue(), PC, nextFourInstructions[0], nextFourInstructions[1], nextFourInstructions[2], nextFourInstructions[3]
+                A.getValue(), F.getValue(), B.getValue(), C.getValue(), D.getValue(), E.getValue(), H.getValue(), L.getValue(),
+                SP.getValue(), PC.getValue(), nextFourInstructions[0], nextFourInstructions[1], nextFourInstructions[2], nextFourInstructions[3]
         );
 //        String logString = String.format(
 //                "%04X:  %02X  A:%02X B:%02X C:%02X D:%02X E:%02X F:%02X H:%02X L:%02X SP:%04X",
