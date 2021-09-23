@@ -246,13 +246,8 @@ public class CPU {
 
             // POP AF|BC|DE|HL
             DoubleRegister xxDoubleRegister = getDoublePushPopRegisterFor(xx);
-            Register lowerRegister = xxDoubleRegister.getLowerRegister();
-            Register higherRegister = xxDoubleRegister.getHigherRegister();
 
-            lowerRegister.setValue(bus.readByteAt(SP.getValue()));
-            SP.setValue(SP.getValue() + 1);
-            higherRegister.setValue(bus.readByteAt(SP.getValue()));
-            SP.setValue(SP.getValue() + 1);
+            xxDoubleRegister.setValue(popFromStack());
 
             return 3;
         } else if ((nextInstruction & 0b11_00_1111) == 0b11_00_0101) {
@@ -261,13 +256,8 @@ public class CPU {
 
             // PUSH AF|BC|DE|HL
             DoubleRegister xxDoubleRegister = getDoublePushPopRegisterFor(xx);
-            Register lowerRegister = xxDoubleRegister.getLowerRegister();
-            Register higherRegister = xxDoubleRegister.getHigherRegister();
 
-            SP.setValue(SP.getValue() - 1);
-            bus.writeByteAt(SP.getValue(), higherRegister.getValue());
-            SP.setValue(SP.getValue() - 1);
-            bus.writeByteAt(SP.getValue(), lowerRegister.getValue());
+            pushToStack(xxDoubleRegister.getValue());
 
             return 4;
         } else if ((nextInstruction & 0b11_000_000) == 0b10_000_000) {
@@ -310,11 +300,7 @@ public class CPU {
             byte cc = (byte) ((nextInstruction & 0b000_11_000) >>> 3);
             boolean flag = getFlagForCond(cc);
             if (flag) {
-                byte lowerAddressBits = bus.readByteAt(SP.getValue());
-                SP.setValue(SP.getValue() + 1);
-                byte higherAddressBits = bus.readByteAt(SP.getValue());
-                SP.setValue(SP.getValue() + 1);
-                PC.setValue(higherAddressBits, lowerAddressBits);
+                PC.setValue(popFromStack());
                 return 5;
             }
 
@@ -341,12 +327,7 @@ public class CPU {
             byte higher = readNextByte();
             int targetAddr = (higher & 0xFF) << 8 | (lower & 0xFF);
             if (flag) {
-                byte lowerPC = PC.getLowerRegister().getValue();
-                byte higherPC = PC.getHigherRegister().getValue();
-                SP.setValue(SP.getValue() - 1);
-                bus.writeByteAt(SP.getValue(), higherPC);
-                SP.setValue(SP.getValue() - 1);
-                bus.writeByteAt(SP.getValue(), lowerPC);
+                pushToStack(PC.getValue());
                 PC.setValue(targetAddr);
                 return 6;
             }
@@ -355,13 +336,7 @@ public class CPU {
             // RST i
             byte iii = (byte) (nextInstruction & 0b00_111_000);
             // push current pc onto the stack
-            int currentPC = PC.getValue();
-            byte lowerPC = (byte) (currentPC & 0xFF);
-            byte higherPC = (byte) ((currentPC >> 8) & 0xFF);
-            SP.setValue(SP.getValue() - 1);
-            bus.writeByteAt(SP.getValue(), higherPC);
-            SP.setValue(SP.getValue() - 1);
-            bus.writeByteAt(SP.getValue(), lowerPC);
+            pushToStack(PC.getValue());
 
             // set pc to page i of memory
             PC.setValue(iii);
@@ -676,31 +651,18 @@ public class CPU {
             byte higher = readNextByte();
             int targetAddr = (higher & 0xFF) << 8 | (lower & 0xFF);
 
-            byte lowerPC = PC.getLowerRegister().getValue();
-            byte higherPC = PC.getHigherRegister().getValue();
-            SP.setValue(SP.getValue() - 1);
-            bus.writeByteAt(SP.getValue(), higherPC);
-            SP.setValue(SP.getValue() - 1);
-            bus.writeByteAt(SP.getValue(), lowerPC);
+            pushToStack(PC.getValue());
             PC.setValue(targetAddr);
 
             return 6;
         } else if (nextInstruction == (byte) 0xC9) {
             // RET
-            byte lowerAddressBits = bus.readByteAt(SP.getValue());
-            SP.setValue(SP.getValue() + 1);
-            byte higherAddressBits = bus.readByteAt(SP.getValue());
-            SP.setValue(SP.getValue() + 1);
-            PC.setValue(higherAddressBits, lowerAddressBits);
+            PC.setValue(popFromStack());
 
             return 4;
         } else if (nextInstruction == (byte) 0xD9) {
             // RETI
-            byte lowerAddressBits = bus.readByteAt(SP.getValue());
-            SP.setValue(SP.getValue() + 1);
-            byte higherAddressBits = bus.readByteAt(SP.getValue());
-            SP.setValue(SP.getValue() + 1);
-            PC.setValue(higherAddressBits, lowerAddressBits);
+            PC.setValue(popFromStack());
 
             interruptController.setInterruptMasterEnable(true);
 
@@ -818,6 +780,22 @@ public class CPU {
             System.out.println("Received invalid instruction: " + String.format("0x%02X", nextInstruction));
             throw new IndexOutOfBoundsException("Received invalid instruction: " + String.format("0x%02X", nextInstruction));
         }
+    }
+
+    private void pushToStack(int value) {
+        SP.setValue(SP.getValue() - 1);
+        bus.writeByteAt(SP.getValue(), (byte) ((value >> 8) & 0xFF));
+        SP.setValue(SP.getValue() - 1);
+        bus.writeByteAt(SP.getValue(), (byte) (value & 0xFF));
+    }
+
+    private int popFromStack() {
+        byte lowerByte = bus.readByteAt(SP.getValue());
+        SP.setValue(SP.getValue() + 1);
+        byte higherByte = bus.readByteAt(SP.getValue());
+        SP.setValue(SP.getValue() + 1);
+
+        return (lowerByte & 0xFF) | ((higherByte & 0xFF) << 8);
     }
 
     private Operator getAluOperatorFor(byte opxxx) {
