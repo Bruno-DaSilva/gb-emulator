@@ -270,134 +270,26 @@ public class CPU {
             bus.writeByteAt(SP.getValue(), lowerRegister.getValue());
 
             return 4;
-        } else if ((nextInstruction & 0b11111_000) == 0b10000_000) {
-            // ADD A, r
-            byte xxx = (byte) (nextInstruction & 0b00000_111);
+        } else if ((nextInstruction & 0b11_000_000) == 0b10_000_000) {
+            // ADD/SUB/etc A, r
+            byte opxxx = (byte) ((nextInstruction & 0b00_111_000) >> 3);
+            Operator operator = getAluOperatorFor(opxxx);
+
+            byte xxx = (byte) (nextInstruction & 0b00_000_111);
             InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
 
             byte orig = A.getValue();
-            byte toAdd = xxxRegister.getValue();
-
-            A.setValue((byte) ((orig & 0xFF) + (toAdd & 0xFF)));
-
-            F.setZ(A.getValue() == 0);
-            F.setN(false);
-            F.setH(orig, toAdd, Operator.ADD);
-            F.setC(orig, toAdd, Operator.ADD);
-
-            return 1 + xxxRegister.getAccessCost();
-        } else if ((nextInstruction & 0b11111_000) == 0b10010_000) {
-            // SUB A, r
-            byte xxx = (byte) (nextInstruction & 0b00000_111);
-            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
-
-            byte orig = A.getValue();
-            byte toSub = xxxRegister.getValue();
-
-            A.setValue((byte) ((orig & 0xFF) - (toSub & 0xFF)));
-
-            F.setZ(A.getValue() == 0);
-            F.setN(true);
-            F.setH(orig, toSub, Operator.SUB);
-            F.setC(orig, toSub, Operator.SUB);
-
-            return 1 + xxxRegister.getAccessCost();
-        } else if ((nextInstruction & 0b11111_000) == 0b10100_000) {
-            // AND A, r
-            byte xxx = (byte) (nextInstruction & 0b00000_111);
-            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
-
-            byte orig = A.getValue();
-            byte toAnd = xxxRegister.getValue();
-
-            A.setValue((byte) (orig & toAnd));
-
-            F.setZ(A.getValue() == 0);
-            F.setN(false);
-            F.setH(true);
-            F.setC(false);
-
-            return 1 + xxxRegister.getAccessCost();
-        } else if ((nextInstruction & 0b11111_000) == 0b10110_000) {
-            // OR A, r
-            byte xxx = (byte) (nextInstruction & 0b00000_111);
-            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
-
-            byte orig = A.getValue();
-            byte toOr = xxxRegister.getValue();
-
-            A.setValue((byte) (orig | toOr));
-
-            F.setZ(A.getValue() == 0);
-            F.setN(false);
-            F.setH(false);
-            F.setC(false);
-
-            return 1 + xxxRegister.getAccessCost();
-        } else if ((nextInstruction & 0b11111_000) == 0b10001_000) {
-            // ADC A, r
-            byte xxx = (byte) (nextInstruction & 0b00000_111);
-            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
-
-            byte orig = A.getValue();
-            byte toAdd = xxxRegister.getValue();
+            byte target = xxxRegister.getValue();
             int carry = F.getC() ? 1 : 0;
 
-            A.setValue((byte) ((orig & 0xFF) + (toAdd & 0xFF) + carry));
-
-            F.setZ(A.getValue() == 0);
-            F.setN(false);
-            F.setH(orig, toAdd, carry, Operator.ADD);
-            F.setC(orig, toAdd, carry, Operator.ADD);
-
-            return 1 + xxxRegister.getAccessCost();
-        } else if ((nextInstruction & 0b11111_000) == 0b10011_000) {
-            // SBC A, r
-            byte xxx = (byte) (nextInstruction & 0b00000_111);
-            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
-
-            byte orig = A.getValue();
-            byte toSub = xxxRegister.getValue();
-            int carry = F.getC() ? 1 : 0;
-
-            A.setValue((byte) ((orig & 0xFF) - (toSub & 0xFF) - carry));
-
-            F.setZ(A.getValue() == 0);
-            F.setN(true);
-            F.setH(orig, toSub, carry, Operator.SUB);
-            F.setC(orig, toSub, carry, Operator.SUB);
-
-            return 1 + xxxRegister.getAccessCost();
-        } else if ((nextInstruction & 0b11111_000) == 0b10101_000) {
-            // XOR A, r
-            byte xxx = (byte) (nextInstruction & 0b00000_111);
-            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
-
-            byte orig = A.getValue();
-            byte toXOR = xxxRegister.getValue();
-
-            A.setValue((byte) (orig ^ toXOR));
-
-            F.setZ(A.getValue() == 0);
-            F.setN(false);
-            F.setH(false);
-            F.setC(false);
-
-            return 1 + xxxRegister.getAccessCost();
-        } else if ((nextInstruction & 0b11111_000) == 0b10111_000) {
-            // CP A, r
-            byte xxx = (byte) (nextInstruction & 0b00000_111);
-            InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
-
-            byte orig = A.getValue();
-            byte toSub = xxxRegister.getValue();
-
-            byte value = (byte) ((orig & 0xFF) - (toSub & 0xFF));
+            byte value = operator.apply(orig, target, carry);
+            if (!operator.equals(Operator.CP))
+                A.setValue(value);
 
             F.setZ(value == 0);
-            F.setN(true);
-            F.setH(orig, toSub,Operator.SUB);
-            F.setC(orig, toSub,Operator.SUB);
+            F.setN(operator);
+            F.setH(orig, target, carry, operator);
+            F.setC(orig, target, carry, operator);
 
             return 1 + xxxRegister.getAccessCost();
         } else if ((nextInstruction & 0b11_00_1111) == 0b00_00_1001) {
@@ -813,96 +705,22 @@ public class CPU {
             interruptController.setInterruptMasterEnable(true);
 
             return 4;
-        } else if (nextInstruction == (byte) 0xC6) {
-            // ADD A, n
-            byte value = readNextByte();
+        } else if ((nextInstruction & 0b11_000_111) == 0b11_000_110) {
+            byte opxxx = (byte) ((nextInstruction & 0b00_111_000) >> 3);
+            Operator operator = getAluOperatorFor(opxxx);
+
             byte orig = A.getValue();
-            A.setValue((byte) ((orig & 0xFF) + (value & 0xFF)));
-
-            F.setZ(A.getValue() == 0);
-            F.setN(false);
-            F.setH(orig, value, Operator.ADD);
-            F.setC(orig, value, Operator.ADD);
-
-            return 2;
-        } else if (nextInstruction == (byte) 0xD6) {
-            // SUB A, n
-            byte value = readNextByte();
-            byte orig = A.getValue();
-            A.setValue((byte) ((orig & 0xFF) - (value & 0xFF)));
-
-            F.setZ(A.getValue() == 0);
-            F.setN(true);
-            F.setH(orig, value, Operator.SUB);
-            F.setC(orig, value, Operator.SUB);
-
-            return 2;
-        } else if (nextInstruction == (byte) 0xE6) {
-            // AND n
-            byte value = readNextByte();
-            A.setValue((byte) (A.getValue() & value));
-            F.setZ(A.getValue() == 0);
-            F.setN(false);
-            F.setH(true);
-            F.setC(false);
-
-            return 2;
-        } else if (nextInstruction == (byte) 0xF6) {
-            // OR n
-            byte value = readNextByte();
-            A.setValue((byte) (A.getValue() | value));
-            F.setZ(A.getValue() == 0);
-            F.setN(false);
-            F.setH(false);
-            F.setC(false);
-
-            return 2;
-        } else if (nextInstruction == (byte) 0xCE) {
-            // ADC A, n
-            byte value = readNextByte();
-            byte orig = A.getValue();
-            int carry = F.getC() ? 1:0;
-            int sum = (orig & 0xFF) + (value & 0xFF) + carry;
-            A.setValue((byte) sum);
-            F.setZ(A.getValue() == 0);
-            F.setN(false);
-            F.setH(orig, value, carry, Operator.ADD);
-            F.setC(orig, value, carry, Operator.ADD);
-
-            return 2;
-        } else if (nextInstruction == (byte) 0xDE) {
-            // SBC A, n
-            byte value = readNextByte();
-            byte orig = A.getValue();
+            byte target = readNextByte();
             int carry = F.getC() ? 1 : 0;
 
-            A.setValue((byte) ((orig & 0xFF) - (value & 0xFF) - carry));
-            F.setZ(A.getValue() == 0);
-            F.setN(true);
-            F.setH(orig, value, carry, Operator.SUB);
-            F.setC(orig, value, carry, Operator.SUB);
+            byte value = operator.apply(orig, target, carry);
+            if (!operator.equals(Operator.CP))
+                A.setValue(value);
 
-            return 2;
-        } else if (nextInstruction == (byte) 0xEE) {
-            // XOR n
-            byte value = readNextByte();
-            A.setValue((byte) (A.getValue() ^ value));
-            F.setZ(A.getValue() == 0);
-            F.setN(false);
-            F.setH(false);
-            F.setC(false);
-
-            return 2;
-        } else if (nextInstruction == (byte) 0xFE) {
-            // CP n
-            byte value = readNextByte();
-            byte orig = A.getValue();
-            byte result = (byte) ((orig & 0xFF) - (value & 0xFF));
-
-            F.setZ(result == 0);
-            F.setN(true);
-            F.setH(orig, value, Operator.SUB);
-            F.setC(orig, value, Operator.SUB);
+            F.setZ(value == 0);
+            F.setN(operator);
+            F.setH(orig, target, carry, operator);
+            F.setC(orig, target, carry, operator);
 
             return 2;
         } else if (nextInstruction == (byte) 0x2F) {
@@ -919,7 +737,7 @@ public class CPU {
             F.setN(false);
             F.setH(false);
             F.setC(!F.getC());
-            
+
             return 1;
         } else if (nextInstruction == (byte) 0x37) {
             // SCF
@@ -999,6 +817,28 @@ public class CPU {
         } else {
             System.out.println("Received invalid instruction: " + String.format("0x%02X", nextInstruction));
             throw new IndexOutOfBoundsException("Received invalid instruction: " + String.format("0x%02X", nextInstruction));
+        }
+    }
+
+    private Operator getAluOperatorFor(byte opxxx) {
+        if (opxxx == 0b000) {
+            return Operator.ADD;
+        } else if (opxxx == 0b001) {
+            return Operator.ADC;
+        } else if (opxxx == 0b010) {
+            return Operator.SUB;
+        } else if (opxxx == 0b011) {
+            return Operator.SBC;
+        } else if (opxxx == 0b100) {
+            return Operator.AND;
+        } else if (opxxx == 0b101) {
+            return Operator.XOR;
+        } else if (opxxx == 0b110) {
+            return Operator.OR;
+        } else if (opxxx == 0b111) {
+            return Operator.CP;
+        } else {
+            throw new IllegalArgumentException("Invalid input for getAluOperatorFor(): " + opxxx);
         }
     }
 
