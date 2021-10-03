@@ -124,6 +124,11 @@ public class CPU {
             // DI (disable interrupts)
             interruptController.setInterruptMasterEnable(false);
             return 1;
+
+
+
+
+
         } else if ((nextInstruction & 0b11_000_111) == 0b00_000_110) {
             // LD r1, n --- LD (HL), n
             byte xxx = (byte) ((nextInstruction & 0b00_111_000) >>> 3);
@@ -155,7 +160,7 @@ public class CPU {
             F.setN(false);
             F.setH(orig, (byte) 0x1, Operator.ADD);
 
-            return xxxRegister.getAccessCost()*2 + 1;
+            return xxxRegister.getAccessCost() * 2 + 1;
         } else if ((nextInstruction & 0b11_000_111) == 0b00_000_101) {
             // DEC r1
             byte xxx = (byte) ((nextInstruction & 0b00_111_000) >>> 3);
@@ -168,7 +173,7 @@ public class CPU {
             F.setN(true);
             F.setH(orig, (byte) 0x1, Operator.SUB);
 
-            return xxxRegister.getAccessCost()*2 + 1;
+            return xxxRegister.getAccessCost() * 2 + 1;
         } else if ((nextInstruction & 0b11_00_1111) == 0b00_00_0001) {
             // LD rr, nn
             byte xx = (byte) ((nextInstruction & 0b00_110_000) >>> 4);
@@ -282,6 +287,41 @@ public class CPU {
             F.setC(orig, target, carry, operator);
 
             return 1 + xxxRegister.getAccessCost();
+        } else if ((nextInstruction & 0b11_000_111) == 0b11_000_110) {
+            // ADD/SUB/etc A, n
+            // fluent API
+
+            Cost cost = Fluent()
+                    //
+                    .loadLeftOperand(InstructionTarget8Bit target)
+                    //
+                    .loadRightOperand(InstructionTarget8Bit target)
+                    // CPUState[nstruction spInt spInt flags] leftByte rightByte
+                    .performOperation(Operator op) // ret [StoreOperation, ...]
+                    // CPUState[instruction flags] leftByte rightByte output
+                    .setFlags() // ret flagmodifications
+                    // [StoreOperation, ...]
+                    .storeOutput() //
+                    // left right
+                    .getCost();
+
+//            byte opxxx = (byte) ((nextInstruction & 0b00_111_000) >> 3);
+//            Operator operator = getAluOperatorFor(opxxx);
+//
+//            byte orig = A.getValue();
+//            byte target = readNextByte();
+//            int carry = F.getC() ? 1 : 0;
+//
+//            byte value = operator.apply(orig, target, carry);
+//            if (!operator.equals(Operator.CP))
+//                A.setValue(value);
+//
+//            F.setZ(value == 0);
+//            F.setN(operator);
+//            F.setH(orig, target, carry, operator);
+//            F.setC(orig, target, carry, operator);
+//
+//            return 2;
         } else if ((nextInstruction & 0b11_00_1111) == 0b00_00_1001) {
             // ADD HL, rr
             byte xx = (byte) ((nextInstruction & 0b00_11_0000) >>> 4);
@@ -323,12 +363,12 @@ public class CPU {
             byte cc = (byte) ((nextInstruction & 0b000_11_000) >>> 3);
             boolean flag = getFlagForCond(cc);
 
-            byte lower = readNextByte();
-            byte higher = readNextByte();
-            int targetAddr = (higher & 0xFF) << 8 | (lower & 0xFF);
+            byte lowerAddressBits = readNextByte();
+            byte higherAddressBits = readNextByte();
+
             if (flag) {
                 pushToStack(PC.getValue());
-                PC.setValue(targetAddr);
+                PC.setValue(higherAddressBits, lowerAddressBits);
                 return 6;
             }
             return 3;
@@ -342,8 +382,7 @@ public class CPU {
             PC.setValue(iii);
 
             return 4;
-        }
-        else if (nextInstruction == (byte) 0xCB) {
+        } else if (nextInstruction == (byte) 0xCB) {
             // 16 bit opcode....
             nextInstruction = readNextByte();
             if ((nextInstruction & 0b11111_000) == 0b00000_000) {
@@ -351,14 +390,19 @@ public class CPU {
                 byte xxx = (byte) (nextInstruction & 0b00000_111);
                 InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
                 byte orig = xxxRegister.getValue();
+
+                // apply
                 int msb = orig & 0x80;
                 xxxRegister.setValue((byte) ((orig & 0xFF) << 1));
                 xxxRegister.setValue((byte) (xxxRegister.getValue() | (msb >>> 7)));
+
+                // flags
                 F.setZ(xxxRegister.getValue() == 0);
                 F.setN(false);
                 F.setH(false);
                 F.setC(msb == 0x80);
 
+                // cost
                 return 2 + xxxRegister.getAccessCost();
             } else if ((nextInstruction & 0b11111_000) == 0b00001_000) {
                 // RRC r
@@ -432,7 +476,7 @@ public class CPU {
                 // SWAP r
                 byte xxx = (byte) (nextInstruction & 0b00000_111);
                 InstructionTarget8Bit xxxRegister = getRegisterFor(xxx);
-                byte lower4  = (byte) ((xxxRegister.getValue() <<  4) & 0xF0);
+                byte lower4 = (byte) ((xxxRegister.getValue() << 4) & 0xF0);
                 byte higher4 = (byte) ((xxxRegister.getValue() >>> 4) & 0x0F);
                 xxxRegister.setValue((byte) (lower4 | higher4));
 
@@ -497,37 +541,18 @@ public class CPU {
             }
 
         }
-        else if (nextInstruction == (byte) 0x20) {
-            // JR nz, n
+
+        else if ((nextInstruction & 0b111_00_111) == 0b001_00_000) {
+            // JR cond, n
             byte addr = readNextByte();
-            if (!F.getZ()) {
+            byte cc = (byte) ((nextInstruction & 0b000_11_000) >>> 3);
+            boolean flag = getFlagForCond(cc);
+
+            if (flag) {
                 PC.setValue(PC.getValue() + addr);
                 return 3;
             }
-            return 2;
-        } else if (nextInstruction == (byte) 0x28) {
-            // JR Z, n
-            byte addr = readNextByte();
-            if (F.getZ()) {
-                PC.setValue(PC.getValue() + addr);
-                return 3;
-            }
-            return 2;
-        } else if (nextInstruction == (byte) 0x30) {
-            // JR NC, n
-            byte addr = readNextByte();
-            if (!F.getC()) {
-                PC.setValue(PC.getValue() + addr);
-                return 3;
-            }
-            return 2;
-        } else if (nextInstruction == (byte) 0x38) {
-            // JR C, n
-            byte addr = readNextByte();
-            if (F.getC()) {
-                PC.setValue(PC.getValue() + addr);
-                return 3;
-            }
+
             return 2;
         } else if (nextInstruction == (byte) 0x18) {
             // JR n
@@ -537,11 +562,10 @@ public class CPU {
             return 3;
         } else if (nextInstruction == (byte) 0xC3) {
             // JP nn
-            byte lowerBits = readNextByte();
-            byte higherBits = readNextByte();
-            int targetPc = (higherBits & 0xFF) << 8 | (lowerBits & 0xFF);
+            byte lowerAddressBits = readNextByte();
+            byte higherAddressBits = readNextByte();
 
-            PC.setValue(targetPc);
+            PC.setValue(higherAddressBits, lowerAddressBits);
 
             return 4;
         } else if (nextInstruction == (byte) 0xE9) {
@@ -641,8 +665,8 @@ public class CPU {
 
             F.setZ(false);
             F.setN(false);
-            F.setH(((orig & 0xF) + (value & 0xF)) & 0x10);
-            F.setC(((orig & 0xFF) + (value & 0xFF)) & 0x100);
+            F.setH((byte) orig, value, Operator.ADD);
+            F.setC((byte) orig, value, Operator.ADD);
 
             return 3;
         } else if (nextInstruction == (byte) 0xCD) {
@@ -658,33 +682,12 @@ public class CPU {
         } else if (nextInstruction == (byte) 0xC9) {
             // RET
             PC.setValue(popFromStack());
-
             return 4;
         } else if (nextInstruction == (byte) 0xD9) {
             // RETI
             PC.setValue(popFromStack());
-
             interruptController.setInterruptMasterEnable(true);
-
             return 4;
-        } else if ((nextInstruction & 0b11_000_111) == 0b11_000_110) {
-            byte opxxx = (byte) ((nextInstruction & 0b00_111_000) >> 3);
-            Operator operator = getAluOperatorFor(opxxx);
-
-            byte orig = A.getValue();
-            byte target = readNextByte();
-            int carry = F.getC() ? 1 : 0;
-
-            byte value = operator.apply(orig, target, carry);
-            if (!operator.equals(Operator.CP))
-                A.setValue(value);
-
-            F.setZ(value == 0);
-            F.setN(operator);
-            F.setH(orig, target, carry, operator);
-            F.setC(orig, target, carry, operator);
-
-            return 2;
         } else if (nextInstruction == (byte) 0x2F) {
             // CPL
             A.setValue((byte) (~A.getValue()));
