@@ -1,4 +1,4 @@
-package emulator.cpu;
+package emulator.cpu.register;
 
 public class Register implements InstructionTarget8Bit {
     protected byte value;

@@ -2,6 +2,8 @@ package emulator.cpu;
 
 import emulator.Bus;
 import emulator.application.SimpleLogFormatter;
+import emulator.cpu.register.DoubleRegister;
+import emulator.cpu.register.Register;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;

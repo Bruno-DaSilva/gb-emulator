@@ -2,6 +2,7 @@ package emulator.cpu;
 
 import emulator.Bus;
 import emulator.InterruptController;
+import emulator.cpu.register.*;
 
 public class CPU {
     // Order of registers; B,C,D,E,H,L,(HL),A
@@ -23,7 +24,7 @@ public class CPU {
     private DoubleRegister SP;
     private DoubleRegister AF;
 
-    private InstructionTarget8Bit HLMemoryPointer;
+    private RegisterMemoryAddress HLMemoryPointer;
 
     private boolean isHalted;
 

@@ -1,4 +1,6 @@
-package emulator.cpu;
+package emulator.cpu.register;
+
+import emulator.cpu.Operator;
 
 public class FlagRegister extends Register {
 

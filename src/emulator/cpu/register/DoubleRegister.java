@@ -1,4 +1,4 @@
-package emulator.cpu;
+package emulator.cpu.register;
 
 public class DoubleRegister {
     private Register higherRegister;
