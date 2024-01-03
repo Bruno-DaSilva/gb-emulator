@@ -1,12 +1,12 @@
 package emulator.cpu.register;
 
-import emulator.Bus;
+import emulator.bus.IBus;
 
 public class RegisterMemoryAddress implements InstructionTarget8Bit {
-    private Bus bus;
+    private IBus bus;
     private DoubleRegister addressRegister;
 
-    public RegisterMemoryAddress(DoubleRegister addressRegister, Bus bus) {
+    public RegisterMemoryAddress(DoubleRegister addressRegister, IBus bus) {
         this.addressRegister = addressRegister;
         this.bus = bus;
     }

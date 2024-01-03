@@ -1,10 +1,12 @@
-package emulator;
+package emulator.bus;
 
+import emulator.HRAM;
+import emulator.WRAM;
 import emulator.cartridge.Cartridge;
 import emulator.interrupts.InterruptController;
 import emulator.interrupts.Timer;
 
-public class Bus {
+public class GameboyBus implements IBus {
     // 0000	- 3FFF emulator.ROM bank 0
     // 4000 - 7FFF emulator.ROM bank 1 (switchable)
 
@@ -19,7 +21,7 @@ public class Bus {
     private InterruptController interruptController;
     private Timer timer;
 
-    public Bus(Cartridge cartridge, InterruptController interruptController, Timer timer) {
+    public GameboyBus(Cartridge cartridge, InterruptController interruptController, Timer timer) {
         this.interruptController = interruptController;
         this.timer = timer;
         this.wram1 = new WRAM();
