@@ -1,13 +1,13 @@
 package emulator.cpu;
 
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+
 import emulator.Bus;
 import emulator.application.SimpleLogFormatter;
 import emulator.cpu.register.DoubleRegister;
 import emulator.cpu.register.Register;
-
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
 
 public class InstructionLogger {
     private static Logger staticLogger;

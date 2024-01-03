@@ -1,10 +1,11 @@
-package emulator;
+package emulator.interrupts;
 
 public class InterruptController {
 
     byte interruptFlag;
     byte interruptEnable;
     private boolean masterEnable;
+    private boolean isHalted;
 
     public void setInterruptFlag(byte value) {
         interruptFlag = (byte) (value & 0b11111);
@@ -66,5 +67,13 @@ public class InterruptController {
 
     public boolean getInterruptMasterEnable() {
         return masterEnable;
+    }
+
+    public void setHalted(boolean isHalted) {
+        this.isHalted = isHalted;
+    }
+
+    public boolean isHalted() {
+        return isHalted;
     }
 }

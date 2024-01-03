@@ -1,5 +1,9 @@
 package emulator;
 
+import emulator.cartridge.Cartridge;
+import emulator.interrupts.InterruptController;
+import emulator.interrupts.Timer;
+
 public class Bus {
     // 0000	- 3FFF emulator.ROM bank 0
     // 4000 - 7FFF emulator.ROM bank 1 (switchable)

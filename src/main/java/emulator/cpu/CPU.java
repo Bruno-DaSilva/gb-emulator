@@ -1,7 +1,7 @@
 package emulator.cpu;
 
 import emulator.Bus;
-import emulator.InterruptController;
+import emulator.interrupts.InterruptController;
 import emulator.cpu.register.*;
 
 public class CPU {

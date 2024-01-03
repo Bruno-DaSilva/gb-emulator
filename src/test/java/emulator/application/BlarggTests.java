@@ -3,14 +3,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import emulator.bus.GameboyBus;
+import emulator.Bus;
 import emulator.cartridge.Cartridge;
 import emulator.cpu.CPU;
 import emulator.cpu.InstructionDecoder;
 import emulator.cpu.InstructionFetcher;
 import emulator.interrupts.InterruptController;
 import emulator.interrupts.Timer;
-import emulator.cpu.GameboyRegisters;
+import emulator.cpu.Registers;
 
 public class BlarggTests {
     public static void main(String[] args) throws IOException {
@@ -35,8 +35,8 @@ public class BlarggTests {
         Cartridge rom = new Cartridge(romBytes);
         InterruptController interruptController = new InterruptController();
         Timer timer = new Timer(interruptController);
-        GameboyBus bus = new GameboyBus(rom, interruptController, timer);
-        GameboyRegisters registers = new GameboyRegisters(bus);
+        Bus bus = new Bus(rom, interruptController, timer);
+        Registers registers = new Registers(bus);
         InstructionFetcher instructionFetcher = new InstructionFetcher(registers, bus);
         InstructionDecoder instructionDecoder = new InstructionDecoder(instructionFetcher, registers, bus, interruptController);
         CPU cpu = new CPU(bus, registers, interruptController, instructionDecoder, instructionFetcher);

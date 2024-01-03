@@ -1,8 +1,6 @@
-package emulator;
+package emulator.cartridge;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Arrays;
 
 public class Cartridge {
@@ -14,9 +12,7 @@ public class Cartridge {
     private int lowerBankBits;
     private int higherBankBits;
 
-    public Cartridge(File romFile) throws IOException {
-        byte[] romBytes = Files.readAllBytes(romFile.toPath());
-
+    public Cartridge(byte[] romBytes) throws IOException {
         bank0 = new ROMBank(Arrays.copyOfRange(romBytes, 0, 0x4000));
         switch(romBytes[0x0147]) {
             case 0x00:
