@@ -1,4 +1,4 @@
-package emulator;
+package emulator.cartridge;
 
 public class ROMBank {
     private byte[] bankContent;

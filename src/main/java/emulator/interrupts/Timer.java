@@ -1,4 +1,4 @@
-package emulator;
+package emulator.interrupts;
 
 public class Timer {
     // TIMA Timer counter
