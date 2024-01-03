@@ -1,14 +1,18 @@
 package emulator.application;
-import emulator.Bus;
-import emulator.Cartridge;
-import emulator.InterruptController;
-import emulator.Timer;
-import emulator.cpu.CPU;
-
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
-public class Main {
+import emulator.bus.GameboyBus;
+import emulator.cartridge.Cartridge;
+import emulator.cpu.CPU;
+import emulator.cpu.InstructionDecoder;
+import emulator.cpu.InstructionFetcher;
+import emulator.interrupts.InterruptController;
+import emulator.interrupts.Timer;
+import emulator.cpu.GameboyRegisters;
+
+public class BlarggTests {
     public static void main(String[] args) throws IOException {
 
 //        File romFile = new File("src/emulator/application/tests/individual/01-special.gb");
@@ -24,13 +28,18 @@ public class Main {
 //        File romFile = new File("src/emulator/application/tests/individual/09-op r,r.gb");
 //        File romFile = new File("src/emulator/application/tests/individual/10-bit ops.gb");
 //        File romFile = new File("src/emulator/application/tests/individual/11-op a,(hl).gb");
-        File romFile = new File("src/emulator/application/tests/cpu_instrs.gb");
+        File romFile = new File("src/test/java/emulator/application/tests/cpu_instrs.gb");
+        // File romFile = new File("src/test/java/emulator/application/tests/source/test.gb");
+        byte[] romBytes = Files.readAllBytes(romFile.toPath());
 
-        Cartridge rom = new Cartridge(romFile);
+        Cartridge rom = new Cartridge(romBytes);
         InterruptController interruptController = new InterruptController();
         Timer timer = new Timer(interruptController);
-        Bus bus = new Bus(rom, interruptController, timer);
-        CPU cpu = new CPU(bus, interruptController);
+        GameboyBus bus = new GameboyBus(rom, interruptController, timer);
+        GameboyRegisters registers = new GameboyRegisters(bus);
+        InstructionFetcher instructionFetcher = new InstructionFetcher(registers, bus);
+        InstructionDecoder instructionDecoder = new InstructionDecoder(instructionFetcher, registers, bus, interruptController);
+        CPU cpu = new CPU(bus, registers, interruptController, instructionDecoder, instructionFetcher);
 
         int maxCycles = Integer.MAX_VALUE;
         int currCycle = 0;
