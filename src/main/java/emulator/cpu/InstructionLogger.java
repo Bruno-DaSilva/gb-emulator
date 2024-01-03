@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
-import emulator.Bus;
 import emulator.application.SimpleLogFormatter;
+import emulator.bus.GameboyBus;
 import emulator.cpu.register.DoubleRegister;
 import emulator.cpu.register.Register;
 
 public class InstructionLogger {
     private static Logger staticLogger;
 
-    public static void logInstruction(Register A, Register F, Register B, Register C, Register D, Register E, Register H, Register L, DoubleRegister SP, DoubleRegister PC, Bus bus) {
+    public static void logInstruction(Register A, Register F, Register B, Register C, Register D, Register E, Register H, Register L, DoubleRegister SP, DoubleRegister PC, GameboyBus bus) {
 
         Logger logger = getLogger();
         byte[] nextFourInstructions = new byte[4];

@@ -1,12 +1,12 @@
 package emulator.cpu;
 
-import emulator.Bus;
+import emulator.bus.IBus;
 import emulator.cpu.register.DoubleRegister;
 import emulator.cpu.register.FlagRegister;
 import emulator.cpu.register.Register;
 import emulator.cpu.register.RegisterMemoryAddress;
 
-public class Registers {
+public class GameboyRegisters {
     private DoubleRegister PC;
     private Register A;
     private Register H;
@@ -24,7 +24,7 @@ public class Registers {
 
     private RegisterMemoryAddress HLMemoryPointer;
 
-    public Registers(Bus bus) {
+    public GameboyRegisters(IBus bus) {
         this.PC = new DoubleRegister(new Register((byte) 0x00), new Register((byte) 0x00));
         this.PC.setValue(0x0100);
         this.A = new Register((byte) 0x01);

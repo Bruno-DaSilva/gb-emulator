@@ -1,23 +1,22 @@
 package emulator.cpu;
 
-import emulator.Bus;
+import emulator.bus.IBus;
 import emulator.interrupts.InterruptController;
 import emulator.cpu.register.*;
 
 public class CPU {
     // Order of registers; B,C,D,E,H,L,(HL),A
-    private Bus bus;
+    private IBus bus;
     private InterruptController interruptController;
-    private Registers registers;
+    private GameboyRegisters registers;
 
     private boolean isHalted;
 
 
-    public CPU(Bus bus, InterruptController interruptController) {
+    public CPU(IBus bus, GameboyRegisters registers, InterruptController interruptController, InstructionDecoder instructionDecoder, InstructionFetcher instructionFetcher) {
         this.bus = bus;
         this.interruptController = interruptController;
-
-        registers = new Registers(bus);
+        this.registers = registers;
         
         // initial values after boot
         
