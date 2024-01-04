@@ -9,6 +9,7 @@ public class InterruptController {
 
     public void setInterruptFlag(byte value) {
         interruptFlag = (byte) (value & 0b11111);
+        // TODO: possibly throw an exception if the value is too large
     }
     public byte getInterruptFlag() {
         return interruptFlag;
@@ -20,6 +21,7 @@ public class InterruptController {
 
     public void setInterruptEnable(byte value) {
         interruptEnable = (byte) (value & 0b11111);
+        // TODO: possibly throw an exception if the value is too large
     }
 
     public boolean interruptReady() {
@@ -37,20 +39,25 @@ public class InterruptController {
         }
         int enabledFlags = (interruptFlag & interruptEnable);
         if ((enabledFlags & 0b1) == 0b1) {
-            interruptFlag = (byte) (interruptFlag & ~(0b1));
-            return 0x40;
+            // VBlank
+            interruptFlag = (byte) (interruptFlag & ~(0b00001));
+            return 0x40; // 0b01000000
         } else if ((enabledFlags & 0b10) == 0b10) {
-            interruptFlag = (byte) (interruptFlag & ~(0b10));
-            return 0x48;
+            // LCD STAT
+            interruptFlag = (byte) (interruptFlag & ~(0b00010));
+            return 0x48; // 0b01001000
         } else if ((enabledFlags & 0b100) == 0b100) {
-            interruptFlag = (byte) (interruptFlag & ~(0b100));
-            return 0x50;
+            // Timer
+            interruptFlag = (byte) (interruptFlag & ~(0b00100));
+            return 0x50; // 0b01010000
         } else if ((enabledFlags & 0b1000) == 0b1000) {
-            interruptFlag = (byte) (interruptFlag & ~(0b1000));
-            return 0x58;
+            // Serial
+            interruptFlag = (byte) (interruptFlag & ~(0b01000));
+            return 0x58; // 0b01011000
         } else if ((enabledFlags & 0b10000) == 0b10000) {
+            // Joypad
             interruptFlag = (byte) (interruptFlag & ~(0b10000));
-            return 0x60;
+            return 0x60; // 0b01100000
         }
 
         throw new UnsupportedOperationException("Cannot send interrupt when no flags are set.");
