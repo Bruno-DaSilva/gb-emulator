@@ -66,7 +66,7 @@ public class Gameboy {
       private GameboyBus bus;
 
       public BusBuilder cartridge(Cartridge rom) {
-          if (rom != null) {
+          if (this.rom != null) {
               throw new IllegalStateException("Cartridge is already set");
           }
           this.rom = rom;
@@ -74,7 +74,7 @@ public class Gameboy {
       }
 
       public BusBuilder cartridge(byte[] romBytes) throws IOException {
-          if (rom != null) {
+          if (this.rom != null) {
               throw new IllegalStateException("Cartridge is already set");
           }
           this.rom = new Cartridge(romBytes);
