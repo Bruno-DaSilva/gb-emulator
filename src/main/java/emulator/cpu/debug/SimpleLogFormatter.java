@@ -1,4 +1,4 @@
-package emulator.application;
+package emulator.cpu.debug;
 
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;

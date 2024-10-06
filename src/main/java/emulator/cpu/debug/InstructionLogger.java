@@ -1,10 +1,10 @@
-package emulator.cpu;
+package emulator.cpu.debug;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
-import emulator.application.SimpleLogFormatter;
+import emulator.cpu.debug.SimpleLogFormatter;
 import emulator.bus.GameboyBus;
 import emulator.cpu.register.DoubleRegister;
 import emulator.cpu.register.Register;
