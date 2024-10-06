@@ -9,13 +9,13 @@
 	<name>Gameboy Emulator</name>
 	<url>http://github.com/bruno-dasilva/gb-emulator</url>
 	<properties>
-	  <maven.compiler.source>18</maven.compiler.source>
-	  <maven.compiler.target>18</maven.compiler.target>
+	  <maven.compiler.source>21</maven.compiler.source>
+	  <maven.compiler.target>21</maven.compiler.target>
 	  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<!-- ... -->
-<dependencies>
+  <dependencies>
     <!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
     <!-- <dependency>
         <groupId>org.junit.platform</groupId>
