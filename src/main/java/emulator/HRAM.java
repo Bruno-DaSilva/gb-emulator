@@ -1,7 +1,9 @@
 package emulator;
 
-public class HRAM {
-    private byte[] ram;
+import emulator.bus.IBusDevice;
+
+public class HRAM implements IBusDevice {
+    private final byte[] ram;
 
     public HRAM() {
         ram = new byte[127];

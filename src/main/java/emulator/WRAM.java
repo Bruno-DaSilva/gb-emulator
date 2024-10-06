@@ -1,7 +1,9 @@
 package emulator;
 
-public class WRAM {
-    private byte[] ram;
+import emulator.bus.IBusDevice;
+
+public class WRAM implements IBusDevice {
+    private final byte[] ram;
 
     public WRAM() {
         ram = new byte[4096];

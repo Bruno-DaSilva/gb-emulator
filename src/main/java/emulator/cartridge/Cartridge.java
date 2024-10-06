@@ -3,7 +3,9 @@ package emulator.cartridge;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class Cartridge {
+import emulator.bus.IBusDevice;
+
+public class Cartridge implements IBusDevice {
     private final CartridgeType cartridgeType;
     private ROMBank bank0;
     private ROMBank bank1;

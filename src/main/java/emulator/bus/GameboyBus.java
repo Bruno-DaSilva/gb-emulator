@@ -2,32 +2,32 @@ package emulator.bus;
 
 import emulator.HRAM;
 import emulator.WRAM;
-import emulator.cartridge.Cartridge;
 import emulator.interrupts.InterruptController;
 import emulator.interrupts.Timer;
 
 public class GameboyBus implements IBus {
     // 0000	- 3FFF emulator.ROM bank 0
     // 4000 - 7FFF emulator.ROM bank 1 (switchable)
-
     // C000 - CFFF work ram
     // D000 - DFFF work ram
+    private final IBusDevice cartridge;
+    private final WRAM wram1;
+    private final WRAM wram2;
+    private final HRAM hram;
+    private final InterruptController interruptController;
+    private final Timer timer;
+    private final ISerialHandler serialHandler;
 
-    private Cartridge cartridge;
-    private WRAM wram1;
-    private WRAM wram2;
-    private HRAM hram;
     private byte serialData;
-    private InterruptController interruptController;
-    private Timer timer;
 
-    public GameboyBus(Cartridge cartridge, InterruptController interruptController, Timer timer) {
+    public GameboyBus(IBusDevice cartridge, InterruptController interruptController, Timer timer, ISerialHandler serialHandler) {
+        this.cartridge = cartridge;
         this.interruptController = interruptController;
         this.timer = timer;
         this.wram1 = new WRAM();
         this.wram2 = new WRAM();
         this.hram = new HRAM();
-        this.cartridge = cartridge;
+        this.serialHandler = serialHandler;
     }
 
     public byte readByteAt(int addr) {
@@ -115,7 +115,8 @@ public class GameboyBus implements IBus {
         } else if (addr == 0xFF02) {
             // serial control
             if ((value & 0x80) == 0x80) {
-                System.err.print((char) (serialData & 0xFF));
+                char dataToWrite = (char) (serialData & 0xFF);
+                serialHandler.writeSerial(dataToWrite);
             }
 //            System.out.println("Writing SERIAL control... " + String.format("0x%02X", addr) + " with value " + String.format("0x%02X", value));
         } else if (addr == 0xFF04) {
