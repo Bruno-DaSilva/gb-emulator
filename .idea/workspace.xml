@@ -8,17 +8,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32750194-bfcb-4101-bff2-201d05df0d21" name="Changes" comment="feat IBusDevice">
-      <change afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/IBusDevice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/HRAM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/HRAM.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/WRAM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/WRAM.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/bus/GameboyBus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/GameboyBus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/cartridge/Cartridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/cartridge/Cartridge.java" afterDir="false" />
+    <list default="true" id="32750194-bfcb-4101-bff2-201d05df0d21" name="Changes" comment="Add TimerTest, more tests to InterruptController">
+      <change beforePath="$PROJECT_DIR$/src/test/java/emulator/cpu/register/RegisterMemoryAddressTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/emulator/cpu/register/RegisterMemoryAddressTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +25,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -78,6 +74,10 @@
     "JUnit.BlarggTest.test10.executor": "Run",
     "JUnit.BlarggTest.test11.executor": "Run",
     "JUnit.BlarggTest.testBlargg.executor": "Run",
+    "JUnit.TimerTest.executor": "Run",
+    "JUnit.TimerTest.testAddCyclesForDifferentClockSpeeds.executor": "Run",
+    "JUnit.emulator in gb-emulator.executor": "Run",
+    "JUnit.java in gb-emulator.executor": "Run",
     "Maven.gb-emulator [compile].executor": "Run",
     "Maven.gb-emulator [test].executor": "Run",
     "RunOnceActivity.CodyAccountHistoryMigration": "true",
@@ -90,14 +90,21 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
-    "git-widget-placeholder": "master",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "add-more-tests",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/bruno/www/projects/gb-emulator",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Global Libraries",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "ml.llm.AIAssistantPromptsLibrary",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -108,7 +115,7 @@
       <recent name="emulator.cpu.instruction" />
     </key>
   </component>
-  <component name="RunManager" selected="Maven.gb-emulator [compile]">
+  <component name="RunManager" selected="JUnit.java in gb-emulator">
     <configuration name="BlarggTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
       <extension name="coverage">
@@ -125,66 +132,49 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BlarggTest.test08" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TimerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="emulator.application.*" />
+          <option name="PATTERN" value="emulator.interrupts.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="emulator.application" />
-      <option name="MAIN_CLASS_NAME" value="emulator.application.BlarggTest" />
-      <option name="METHOD_NAME" value="test08" />
+      <option name="PACKAGE_NAME" value="emulator.interrupts" />
+      <option name="MAIN_CLASS_NAME" value="emulator.interrupts.TimerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TimerTest.testAddCyclesForDifferentClockSpeeds" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="gb-emulator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="emulator.interrupts.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="emulator.interrupts" />
+      <option name="MAIN_CLASS_NAME" value="emulator.interrupts.TimerTest" />
+      <option name="METHOD_NAME" value="testAddCyclesForDifferentClockSpeeds" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BlarggTest.test09" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="emulator in gb-emulator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="emulator.application.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="emulator.application" />
-      <option name="MAIN_CLASS_NAME" value="emulator.application.BlarggTest" />
-      <option name="METHOD_NAME" value="test09" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java/emulator" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BlarggTest.test10" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="java in gb-emulator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="emulator.application.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="emulator.application" />
-      <option name="MAIN_CLASS_NAME" value="emulator.application.BlarggTest" />
-      <option name="METHOD_NAME" value="test10" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="BlarggTest.test11" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="gb-emulator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="emulator.application.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="emulator.application" />
-      <option name="MAIN_CLASS_NAME" value="emulator.application.BlarggTest" />
-      <option name="METHOD_NAME" value="test11" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -250,23 +240,31 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="JUnit.TimerTest" />
+      <item itemvalue="JUnit.TimerTest.testAddCyclesForDifferentClockSpeeds" />
+      <item itemvalue="JUnit.emulator in gb-emulator" />
+      <item itemvalue="JUnit.java in gb-emulator" />
       <item itemvalue="JUnit.BlarggTest" />
-      <item itemvalue="JUnit.BlarggTest.test08" />
-      <item itemvalue="JUnit.BlarggTest.test09" />
-      <item itemvalue="JUnit.BlarggTest.test10" />
-      <item itemvalue="JUnit.BlarggTest.test11" />
       <item itemvalue="Maven.gb-emulator [test]" />
       <item itemvalue="Maven.gb-emulator [compile]" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.java in gb-emulator" />
+        <item itemvalue="JUnit.TimerTest.testAddCyclesForDifferentClockSpeeds" />
+        <item itemvalue="JUnit.TimerTest" />
+        <item itemvalue="JUnit.emulator in gb-emulator" />
         <item itemvalue="JUnit.BlarggTest" />
-        <item itemvalue="JUnit.BlarggTest.test11" />
-        <item itemvalue="JUnit.BlarggTest.test10" />
-        <item itemvalue="JUnit.BlarggTest.test09" />
-        <item itemvalue="JUnit.BlarggTest.test08" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -276,6 +274,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1671435239121</updated>
+      <workItem from="1734259260204" duration="9728000" />
     </task>
     <task id="LOCAL-00001" summary="feat: automatic blargg tests">
       <option name="closed" value="true" />
@@ -301,14 +300,58 @@
       <option name="project" value="LOCAL" />
       <updated>1728243637939</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat IBusDevice">
+      <option name="closed" value="true" />
+      <created>1728243873909</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1728243873909</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add .idea">
+      <option name="closed" value="true" />
+      <created>1728286674172</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1728286674172</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add TimerTest, more tests to InterruptController">
+      <option name="closed" value="true" />
+      <created>1734277367682</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1734277367682</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: automatic blargg tests" />
     <MESSAGE value="fix: java 21" />
     <MESSAGE value="fix: compiler flags" />
     <MESSAGE value="feat IBusDevice" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat IBusDevice" />
+    <MESSAGE value="add .idea" />
+    <MESSAGE value="Add TimerTest, more tests to InterruptController" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add TimerTest, more tests to InterruptController" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

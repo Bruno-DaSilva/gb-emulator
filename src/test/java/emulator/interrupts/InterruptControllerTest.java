@@ -13,6 +13,9 @@ public class InterruptControllerTest {
         interruptController = new InterruptController();
     }
 
+    ///////////////////////////////////////////////////////////////////////
+    ///////////////////////// interrupt flag //////////////////////////////
+    ///////////////////////////////////////////////////////////////////////
     @Test
     void testSetInterruptFlagTooLarge() {
         interruptController.setInterruptFlag((byte) 0b100000);
@@ -24,6 +27,8 @@ public class InterruptControllerTest {
         assertEquals((byte) 0b00000, interruptController.getInterruptEnable());
     }
 
+    ///////////////////////////////////////////////////////////////////////
+    /////////////////////// getHighestPriorityInterrupt ///////////////////
     ///////////////////////////////////////////////////////////////////////
     @Test
     void testGetHighestPriorityInterruptAddress() {
@@ -151,5 +156,84 @@ public class InterruptControllerTest {
             }
         }
     }
+
+    ////////////////////////////////////////////////////////////////////
+    ////////////////////// Testing interruptReady //////////////////////
+    ////////////////////////////////////////////////////////////////////
+    @Test
+    void testInterruptReadyWhenMasterEnableTrueAndInterruptsMatch() {
+        interruptController.setInterruptMasterEnable(true);
+        interruptController.setInterruptEnable((byte) 0b10101);
+        interruptController.setInterruptFlag((byte) 0b00101); // Overlap in interruptEnable and interruptFlag
+
+        assertTrue(interruptController.interruptReady());
+    }
+
+    @Test
+    void testInterruptReadyWhenMasterEnableFalse() {
+        interruptController.setInterruptMasterEnable(false);
+        interruptController.setInterruptEnable((byte) 0b10101);
+        interruptController.setInterruptFlag((byte) 0b00101); // Overlap in interruptEnable and interruptFlag
+
+        assertFalse(interruptController.interruptReady());
+    }
+
+    @Test
+    void testInterruptReadyWhenNoMatchingFlagsAndEnables() {
+        interruptController.setInterruptMasterEnable(true);
+        interruptController.setInterruptEnable((byte) 0b10100); // No overlap
+        interruptController.setInterruptFlag((byte) 0b01010);
+
+        assertFalse(interruptController.interruptReady());
+    }
+
+    @Test
+    void testInterruptReadyWhenBothFlagsAndEnablesAreZero() {
+        interruptController.setInterruptMasterEnable(true);
+        interruptController.setInterruptEnable((byte) 0b00000); // No enabled interrupts
+        interruptController.setInterruptFlag((byte) 0b00000);
+
+        assertFalse(interruptController.interruptReady());
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    ///////////////////////// master enable ////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+
+    @Test
+    void testSetAndGetInterruptMasterEnable() {
+        interruptController.setInterruptMasterEnable(true);
+        assertTrue(interruptController.getInterruptMasterEnable());
+
+        interruptController.setInterruptMasterEnable(false);
+        assertFalse(interruptController.getInterruptMasterEnable());
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    //////////////////////// setTimerInterruptFlag /////////////////////
+    ////////////////////////////////////////////////////////////////////
+
+    @Test
+    void testSetTimerInterruptFlag() {
+        // Ensure the Timer interrupt flag (`0b00100`) is initially unset
+        interruptController.setInterruptFlag((byte) 0b00000);
+
+        interruptController.setTimerInterruptFlag();
+
+        assertEquals((byte) 0b00100, interruptController.getInterruptFlag());
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    ////////////////////////////// halted //////////////////////////////
+    ////////////////////////////////////////////////////////////////////
+    @Test
+    void testSetAndIsHalted() {
+        interruptController.setHalted(true);
+        assertTrue(interruptController.isHalted());
+
+        interruptController.setHalted(false);
+        assertFalse(interruptController.isHalted());
+    }
+
 
 }
