@@ -1,4 +1,5 @@
 package emulator.bus;
+import emulator.utils.SimpleBus;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

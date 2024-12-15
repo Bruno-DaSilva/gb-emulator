@@ -1,4 +1,6 @@
-package emulator.bus;
+package emulator.utils;
+
+import emulator.bus.IBus;
 
 /**
  * SimpleBus will hold a list of bytes, and will be able to read and write bytes at a given address.

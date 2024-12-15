@@ -72,6 +72,10 @@ public class InterruptController {
         interruptFlag |= 0b00100;
     }
 
+    public boolean getTimerInterruptFlag() {
+        return (interruptFlag & 0b00100) == 0b00100;
+    }
+
     public boolean getInterruptMasterEnable() {
         return masterEnable;
     }

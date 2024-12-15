@@ -20,7 +20,7 @@ public class Timer {
     public void addCycles(int cycles) {
         if (timerEnabled()) {
             currentCycles += cycles;
-            if (currentCycles > CPU_clocks_per_tick) {
+            while (currentCycles > CPU_clocks_per_tick) {
                 currentCycles -= CPU_clocks_per_tick;
                 incrementTimer();
             }
