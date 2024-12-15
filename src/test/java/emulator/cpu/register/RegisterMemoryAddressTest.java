@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import emulator.bus.IBus;
-import emulator.bus.SimpleBus;
+import emulator.utils.SimpleBus;
 
 public class RegisterMemoryAddressTest {
     @Test

@@ -8,16 +8,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32750194-bfcb-4101-bff2-201d05df0d21" name="Changes" comment="add .idea">
-      <change afterPath="$PROJECT_DIR$/src/test/java/emulator/interrupts/TimerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/bus/SimpleBus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/emulator/utils/SimpleBus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/interrupts/InterruptController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/interrupts/InterruptController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/interrupts/Timer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/interrupts/Timer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/emulator/bus/SimpleBusTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/SimpleBusTest.java" afterDir="false" />
+    <list default="true" id="32750194-bfcb-4101-bff2-201d05df0d21" name="Changes" comment="Add TimerTest, more tests to InterruptController">
       <change beforePath="$PROJECT_DIR$/src/test/java/emulator/cpu/register/RegisterMemoryAddressTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/emulator/cpu/register/RegisterMemoryAddressTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/emulator/interrupts/InterruptControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/emulator/interrupts/InterruptControllerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -282,7 +274,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1671435239121</updated>
-      <workItem from="1734259260204" duration="9193000" />
+      <workItem from="1734259260204" duration="9728000" />
     </task>
     <task id="LOCAL-00001" summary="feat: automatic blargg tests">
       <option name="closed" value="true" />
@@ -324,7 +316,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728286674172</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Add TimerTest, more tests to InterruptController">
+      <option name="closed" value="true" />
+      <created>1734277367682</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1734277367682</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -347,7 +347,8 @@
     <MESSAGE value="fix: compiler flags" />
     <MESSAGE value="feat IBusDevice" />
     <MESSAGE value="add .idea" />
-    <option name="LAST_COMMIT_MESSAGE" value="add .idea" />
+    <MESSAGE value="Add TimerTest, more tests to InterruptController" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add TimerTest, more tests to InterruptController" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
