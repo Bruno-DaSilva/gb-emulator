@@ -1,4 +1,4 @@
-package emulator.bus;
+package emulator.bus.device;
 
 public interface IBusDevice {
     byte readByteAt(int addr);

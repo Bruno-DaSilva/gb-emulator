@@ -1,6 +1,4 @@
-package emulator;
-
-import emulator.bus.IBusDevice;
+package emulator.bus.device;
 
 public class HRAM implements IBusDevice {
     private final byte[] ram;

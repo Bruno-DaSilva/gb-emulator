@@ -3,7 +3,7 @@ package emulator;
 import java.io.IOException;
 
 import emulator.bus.GameboyBus;
-import emulator.cartridge.Cartridge;
+import emulator.bus.device.cartridge.Cartridge;
 import emulator.cpu.CPU;
 import emulator.cpu.GameboyRegisters;
 import emulator.cpu.InstructionDecoder;

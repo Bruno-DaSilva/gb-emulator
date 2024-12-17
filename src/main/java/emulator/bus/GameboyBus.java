@@ -1,7 +1,8 @@
 package emulator.bus;
 
-import emulator.HRAM;
-import emulator.WRAM;
+import emulator.bus.device.HRAM;
+import emulator.bus.device.WRAM;
+import emulator.bus.device.IBusDevice;
 import emulator.interrupts.InterruptController;
 import emulator.interrupts.Timer;
 
@@ -32,6 +33,11 @@ public class GameboyBus implements IBus {
 
     public byte readByteAt(int addr) {
         if (addr < 0x8000) {
+            // Cartridge ROM
+            return cartridge.readByteAt(addr);
+        }
+        if (addr >= 0xA000 && addr < 0xC000) {
+            // Cartridge RAM
             return cartridge.readByteAt(addr);
         }
         if (addr >= 0xC000 && addr < 0xD000) {
@@ -74,10 +80,15 @@ public class GameboyBus implements IBus {
         throw new IndexOutOfBoundsException("address " + String.format("0x%02X%n", addr) + "cannot be read from");
     }
     public void writeByteAt(int addr, byte value) {
-        if (addr < 0x8000 || (addr >= 0xA000 && addr < 0xC000)) {
+        if (addr < 0x8000) {
+            // Cartridge ROM
 //            throw new IllegalArgumentException("Cannot write to ROM at address " + String.format("0x%02X%n", addr) + " with value " + String.format("0x%02X%n", value));
             cartridge.writeByteAt(addr, value);
             return;
+        }
+        if (addr >= 0xA000 && addr < 0xC000) {
+            // Cartridge RAM
+            cartridge.writeByteAt(addr, value);
         }
         if (addr >= 0xC000 && addr < 0xD000) {
             wram1.writeByteAt(addr - 0xC000, value);

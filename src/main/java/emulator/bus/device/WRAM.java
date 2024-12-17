@@ -1,6 +1,4 @@
-package emulator;
-
-import emulator.bus.IBusDevice;
+package emulator.bus.device;
 
 public class WRAM implements IBusDevice {
     private final byte[] ram;
