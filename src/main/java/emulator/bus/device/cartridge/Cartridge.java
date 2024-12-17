@@ -2,7 +2,6 @@ package emulator.bus.device.cartridge;
 
 import emulator.bus.device.IBusDevice;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 public class Cartridge implements IBusDevice {
