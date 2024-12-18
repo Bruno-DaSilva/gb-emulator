@@ -8,7 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * TODO: MBC1 implementation currently does not handle cartridge sizes above 512KB, which requires extra logic
+ * TODO: MBC1 implementation currently does not handle cartridge sizes above 512KB, which requires extra logic.
+ *   Also does not support RAM yet.
  */
 public class MBC1CartridgeTest {
     /**
@@ -189,5 +190,4 @@ public class MBC1CartridgeTest {
         // Verify the exception message content
         assertEquals("Mismatch between MBC1Cartridge constructor and underlying cartridge type in ROM", exception.getMessage());
     }
-
 }

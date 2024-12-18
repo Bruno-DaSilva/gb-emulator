@@ -25,10 +25,4 @@ class CartridgeTest {
             assertEquals("Cartridge type " + i + " not supported.", exception.getMessage());
         }
     }
-
-
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-
 }
