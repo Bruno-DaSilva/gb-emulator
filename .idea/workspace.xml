@@ -8,13 +8,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32750194-bfcb-4101-bff2-201d05df0d21" name="Changes" comment="Add TimerTest, more tests to InterruptController">
-      <change beforePath="$PROJECT_DIR$/src/test/java/emulator/cpu/register/RegisterMemoryAddressTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/emulator/cpu/register/RegisterMemoryAddressTest.java" afterDir="false" />
+    <list default="true" id="32750194-bfcb-4101-bff2-201d05df0d21" name="Changes" comment="remove IOException">
+      <change afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/DefaultCartridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/MBC1Cartridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/device/cartridge/DefaultCartridgeTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/device/cartridge/MBC1CartridgeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/Gameboy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/Gameboy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/Cartridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/Cartridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/emulator/bus/device/cartridge/CartridgeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/device/cartridge/CartridgeTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageOptionsProvider">
+    <option name="myAddOrReplace" value="0" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -74,9 +84,28 @@
     "JUnit.BlarggTest.test10.executor": "Run",
     "JUnit.BlarggTest.test11.executor": "Run",
     "JUnit.BlarggTest.testBlargg.executor": "Run",
+    "JUnit.CartridgeTest.executor": "Coverage",
+    "JUnit.CartridgeTest.test_General_OutOfBoundsRomSizeCodeThrowsException.executor": "Run",
+    "JUnit.CartridgeTest.test_MBC1_OutOfBoundsRomSizeCodeThrowsException.executor": "Coverage",
+    "JUnit.CartridgeTest.test_MBC1_ReadByteAt_FirstROMBank.executor": "Debug",
+    "JUnit.CartridgeTest.test_MBC1_UnsupportedBankingMode.executor": "Run",
+    "JUnit.CartridgeTest.test_NoneCartridge_ReadByteAt.executor": "Run",
+    "JUnit.CartridgeTest.test_OutOfBoundsRomSizeCodeThrowsException.executor": "Run",
+    "JUnit.DefaultCartridgeTest.executor": "Run",
+    "JUnit.HRAMTest.executor": "Run",
+    "JUnit.MBC1CartridgeTest.executor": "Run",
+    "JUnit.MBC1CartridgeTest.test_MBC1_ReadByteAt_FirstROMBank.executor": "Run",
+    "JUnit.MBC1CartridgeTest.test_ReadByteAt_LowerIndexableROMBanks.executor": "Run",
+    "JUnit.ROMBankTest.executor": "Coverage",
+    "JUnit.ROMBankTest.testConstructor_NullBankContent.executor": "Run",
     "JUnit.TimerTest.executor": "Run",
     "JUnit.TimerTest.testAddCyclesForDifferentClockSpeeds.executor": "Run",
+    "JUnit.WRAMTest.executor": "Coverage",
+    "JUnit.WRAMTest.writeByteAt_validAddressAndValue.executor": "Coverage",
+    "JUnit.bus in gb-emulator.executor": "Coverage",
     "JUnit.emulator in gb-emulator.executor": "Run",
+    "JUnit.emulator.bus.* and 3 more.executor": "Run",
+    "JUnit.emulator.bus.* and 5 more.executor": "Coverage",
     "JUnit.java in gb-emulator.executor": "Run",
     "Maven.gb-emulator [compile].executor": "Run",
     "Maven.gb-emulator [test].executor": "Run",
@@ -91,9 +120,9 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "add-more-tests",
+    "git-widget-placeholder": "more-tests",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/bruno/www/projects/gb-emulator",
+    "last_opened_file_path": "/Users/bruno/www/projects/gb-emulator/src/test/java/emulator/bus/device",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -103,7 +132,7 @@
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "ml.llm.AIAssistantPromptsLibrary",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -111,62 +140,73 @@
     <key name="CreateClassDialog.RecentsKey">
       <recent name="emulator.cpu.instruction" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/test/java/emulator/bus/device" />
+      <recent name="$PROJECT_DIR$/tmp" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="emulator.cpu.instruction" />
     </key>
   </component>
   <component name="RunManager" selected="JUnit.java in gb-emulator">
-    <configuration name="BlarggTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MBC1CartridgeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="emulator.application.*" />
+          <option name="PATTERN" value="emulator.bus.device.cartridge.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="emulator.application" />
-      <option name="MAIN_CLASS_NAME" value="emulator.application.BlarggTest" />
-      <option name="METHOD_NAME" value="" />
+      <option name="PACKAGE_NAME" value="emulator.bus.device.cartridge" />
+      <option name="MAIN_CLASS_NAME" value="emulator.bus.device.cartridge.MBC1CartridgeTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TimerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MBC1CartridgeTest.test_MBC1_ReadByteAt_FirstROMBank" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="emulator.interrupts.*" />
+          <option name="PATTERN" value="emulator.bus.device.cartridge.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="emulator.interrupts" />
-      <option name="MAIN_CLASS_NAME" value="emulator.interrupts.TimerTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TimerTest.testAddCyclesForDifferentClockSpeeds" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="gb-emulator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="emulator.interrupts.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="emulator.interrupts" />
-      <option name="MAIN_CLASS_NAME" value="emulator.interrupts.TimerTest" />
-      <option name="METHOD_NAME" value="testAddCyclesForDifferentClockSpeeds" />
+      <option name="PACKAGE_NAME" value="emulator.bus.device.cartridge" />
+      <option name="MAIN_CLASS_NAME" value="emulator.bus.device.cartridge.MBC1CartridgeTest" />
+      <option name="METHOD_NAME" value="test_MBC1_ReadByteAt_FirstROMBank" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="emulator in gb-emulator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MBC1CartridgeTest.test_ReadByteAt_LowerIndexableROMBanks" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/src/test/java/emulator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="emulator.bus.device.cartridge.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="emulator.bus.device.cartridge" />
+      <option name="MAIN_CLASS_NAME" value="emulator.bus.device.cartridge.MBC1CartridgeTest" />
+      <option name="METHOD_NAME" value="test_ReadByteAt_LowerIndexableROMBanks" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="emulator.bus.* and 5 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="gb-emulator" />
+      <option name="TEST_OBJECT" value="pattern" />
+      <patterns>
+        <pattern testClass="emulator.bus.*" />
+        <pattern testClass="emulator.bus.device.*" />
+        <pattern testClass="emulator.bus.SimpleBusTest" />
+        <pattern testClass="emulator.cpu.*" />
+        <pattern testClass="emulator.interrupts.*" />
+        <pattern testClass="emulator.utils.*" />
+      </patterns>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -240,31 +280,23 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.TimerTest" />
-      <item itemvalue="JUnit.TimerTest.testAddCyclesForDifferentClockSpeeds" />
-      <item itemvalue="JUnit.emulator in gb-emulator" />
+      <item itemvalue="JUnit.MBC1CartridgeTest" />
+      <item itemvalue="JUnit.MBC1CartridgeTest.test_MBC1_ReadByteAt_FirstROMBank" />
+      <item itemvalue="JUnit.MBC1CartridgeTest.test_ReadByteAt_LowerIndexableROMBanks" />
+      <item itemvalue="JUnit.emulator.bus.* and 5 more" />
       <item itemvalue="JUnit.java in gb-emulator" />
-      <item itemvalue="JUnit.BlarggTest" />
       <item itemvalue="Maven.gb-emulator [test]" />
       <item itemvalue="Maven.gb-emulator [compile]" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.java in gb-emulator" />
-        <item itemvalue="JUnit.TimerTest.testAddCyclesForDifferentClockSpeeds" />
-        <item itemvalue="JUnit.TimerTest" />
-        <item itemvalue="JUnit.emulator in gb-emulator" />
-        <item itemvalue="JUnit.BlarggTest" />
+        <item itemvalue="JUnit.MBC1CartridgeTest" />
+        <item itemvalue="JUnit.emulator.bus.* and 5 more" />
+        <item itemvalue="JUnit.MBC1CartridgeTest.test_ReadByteAt_LowerIndexableROMBanks" />
+        <item itemvalue="JUnit.MBC1CartridgeTest.test_MBC1_ReadByteAt_FirstROMBank" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.21565.193" />
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-IU-243.21565.193" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -274,7 +306,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1671435239121</updated>
-      <workItem from="1734259260204" duration="9728000" />
+      <workItem from="1734259260204" duration="14467000" />
+      <workItem from="1734286200264" duration="374000" />
+      <workItem from="1734286580714" duration="126000" />
+      <workItem from="1734286712373" duration="410000" />
+      <workItem from="1734287128306" duration="5045000" />
+      <workItem from="1734337391547" duration="76000" />
+      <workItem from="1734337472596" duration="390000" />
+      <workItem from="1734337918178" duration="379000" />
+      <workItem from="1734338361717" duration="1018000" />
     </task>
     <task id="LOCAL-00001" summary="feat: automatic blargg tests">
       <option name="closed" value="true" />
@@ -324,11 +364,26 @@
       <option name="project" value="LOCAL" />
       <updated>1734277367682</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="fix import">
+      <option name="closed" value="true" />
+      <created>1734277870084</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1734277870084</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="executable:docker" />
+    <option featureType="com.intellij.configurationType" implementationName="JUnit" />
+    <option featureType="dependencySupport" implementationName="executable:kubectl" />
+    <option featureType="com.intellij.configurationType" implementationName="MavenRunConfiguration" />
+    <option featureType="dependencySupport" implementationName="executable:terraform" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -348,10 +403,45 @@
     <MESSAGE value="feat IBusDevice" />
     <MESSAGE value="add .idea" />
     <MESSAGE value="Add TimerTest, more tests to InterruptController" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add TimerTest, more tests to InterruptController" />
+    <MESSAGE value="fix import" />
+    <MESSAGE value="add more tests" />
+    <MESSAGE value="remove IOException" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove IOException" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties>
+            <option name="NOTIFY_CAUGHT" value="false" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/gb_emulator$WRAMTest.ic" NAME="WRAMTest Coverage Results" MODIFIED="1734423606523" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>emulator.bus.device.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/gb_emulator$bus_in_gb_emulator.ic" NAME="bus in gb-emulator Coverage Results" MODIFIED="1734463937405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/gb_emulator$CartridgeTest.ic" NAME="CartridgeTest Coverage Results" MODIFIED="1734465870967" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>emulator.bus.device.cartridge.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/gb_emulator$CartridgeTest_test_MBC1_OutOfBoundsRomSizeCodeThrowsException.ic" NAME="CartridgeTest.test_MBC1_OutOfBoundsRomSizeCodeThrowsException Coverage Results" MODIFIED="1734464328918" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>emulator.bus.device.cartridge.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/gb_emulator$emulator_bus___and_5_more.ic" NAME="emulator.bus.* and 5 more Coverage Results" MODIFIED="1734532005287" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/gb_emulator$WRAMTest_writeByteAt_validAddressAndValue.ic" NAME="WRAMTest.writeByteAt_validAddressAndValue Coverage Results" MODIFIED="1734423639209" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>emulator.bus.device.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/gb_emulator$java_in_gb_emulator.ic" NAME="java in gb-emulator Coverage Results" MODIFIED="1734467713402" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/gb_emulator$ROMBankTest.ic" NAME="ROMBankTest Coverage Results" MODIFIED="1734431894039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
+      <FILTER>emulator.bus.device.cartridge.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/gb_emulator$emulator_bus___and_3_more.ic" NAME="emulator.bus.* and 3 more Coverage Results" MODIFIED="1734423144687" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
   </component>
 </project>

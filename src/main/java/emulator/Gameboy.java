@@ -1,9 +1,7 @@
 package emulator;
 
-import java.io.IOException;
-
 import emulator.bus.GameboyBus;
-import emulator.cartridge.Cartridge;
+import emulator.bus.device.cartridge.Cartridge;
 import emulator.cpu.CPU;
 import emulator.cpu.GameboyRegisters;
 import emulator.cpu.InstructionDecoder;
@@ -37,8 +35,8 @@ public class Gameboy {
         this.cpu = builder.cpu;
     }
 
-    public Gameboy(byte[] romBytes) throws IOException {
-        this.rom = new Cartridge(romBytes);
+    public Gameboy(byte[] romBytes) {
+        this.rom = Cartridge.createCartridge(romBytes);
         this.interruptController = new InterruptController();
         this.timer = new Timer(interruptController);
         this.serialHandler = new PrinterSerialHandler();
@@ -73,11 +71,11 @@ public class Gameboy {
           return this;
       }
 
-      public BusBuilder cartridge(byte[] romBytes) throws IOException {
+      public BusBuilder cartridge(byte[] romBytes) {
           if (this.rom != null) {
               throw new IllegalStateException("Cartridge is already set");
           }
-          this.rom = new Cartridge(romBytes);
+          this.rom = Cartridge.createCartridge(romBytes);
           return this;
       }
 
