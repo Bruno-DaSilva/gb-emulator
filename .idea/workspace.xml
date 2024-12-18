@@ -8,20 +8,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32750194-bfcb-4101-bff2-201d05df0d21" name="Changes" comment="fix import">
-      <change afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/device/HRAMTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/device/WRAMTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/device/cartridge/CartridgeTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/device/cartridge/ROMBankTest.java" afterDir="false" />
+    <list default="true" id="32750194-bfcb-4101-bff2-201d05df0d21" name="Changes" comment="remove IOException">
+      <change afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/DefaultCartridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/MBC1Cartridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/device/cartridge/DefaultCartridgeTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/device/cartridge/MBC1CartridgeTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/emulator/Gameboy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/Gameboy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/HRAM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/HRAM.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/WRAM.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/WRAM.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/bus/GameboyBus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/GameboyBus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/bus/IBusDevice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/IBusDevice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/cartridge/Cartridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/Cartridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/cartridge/CartridgeType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/CartridgeType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/cartridge/ROMBank.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/ROMBank.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/Cartridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/emulator/bus/device/cartridge/Cartridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/emulator/bus/device/cartridge/CartridgeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/emulator/bus/device/cartridge/CartridgeTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,68 +68,74 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test01.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test02.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test03.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test04.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test05.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test06.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test07.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test08.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test09.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test10.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.test11.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.BlarggTest.testBlargg.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CartridgeTest.executor&quot;: &quot;Coverage&quot;,
-    &quot;JUnit.CartridgeTest.test_General_OutOfBoundsRomSizeCodeThrowsException.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CartridgeTest.test_MBC1_OutOfBoundsRomSizeCodeThrowsException.executor&quot;: &quot;Coverage&quot;,
-    &quot;JUnit.CartridgeTest.test_MBC1_UnsupportedBankingMode.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CartridgeTest.test_NoneCartridge_ReadByteAt.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.CartridgeTest.test_OutOfBoundsRomSizeCodeThrowsException.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.HRAMTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ROMBankTest.executor&quot;: &quot;Coverage&quot;,
-    &quot;JUnit.ROMBankTest.testConstructor_NullBankContent.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TimerTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.TimerTest.testAddCyclesForDifferentClockSpeeds.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.WRAMTest.executor&quot;: &quot;Coverage&quot;,
-    &quot;JUnit.WRAMTest.writeByteAt_validAddressAndValue.executor&quot;: &quot;Coverage&quot;,
-    &quot;JUnit.bus in gb-emulator.executor&quot;: &quot;Coverage&quot;,
-    &quot;JUnit.emulator in gb-emulator.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.emulator.bus.* and 3 more.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.java in gb-emulator.executor&quot;: &quot;Coverage&quot;,
-    &quot;Maven.gb-emulator [compile].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.gb-emulator [test].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.CodyAccountHistoryMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountsIdsRefresh&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyConvertUrlToCodebaseName&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyHistoryLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyMigrateChatHistory-v2&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyProjectSettingsMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ToggleCodyToolWindowAfterMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;add-more-tests&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/bruno/www/projects/gb-emulator/src/test/java/emulator/bus/device&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Global Libraries&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AIAssistantPromptsLibrary&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "JUnit.BlarggTest.executor": "Run",
+    "JUnit.BlarggTest.test01.executor": "Run",
+    "JUnit.BlarggTest.test02.executor": "Run",
+    "JUnit.BlarggTest.test03.executor": "Run",
+    "JUnit.BlarggTest.test04.executor": "Run",
+    "JUnit.BlarggTest.test05.executor": "Run",
+    "JUnit.BlarggTest.test06.executor": "Run",
+    "JUnit.BlarggTest.test07.executor": "Run",
+    "JUnit.BlarggTest.test08.executor": "Run",
+    "JUnit.BlarggTest.test09.executor": "Run",
+    "JUnit.BlarggTest.test10.executor": "Run",
+    "JUnit.BlarggTest.test11.executor": "Run",
+    "JUnit.BlarggTest.testBlargg.executor": "Run",
+    "JUnit.CartridgeTest.executor": "Coverage",
+    "JUnit.CartridgeTest.test_General_OutOfBoundsRomSizeCodeThrowsException.executor": "Run",
+    "JUnit.CartridgeTest.test_MBC1_OutOfBoundsRomSizeCodeThrowsException.executor": "Coverage",
+    "JUnit.CartridgeTest.test_MBC1_ReadByteAt_FirstROMBank.executor": "Debug",
+    "JUnit.CartridgeTest.test_MBC1_UnsupportedBankingMode.executor": "Run",
+    "JUnit.CartridgeTest.test_NoneCartridge_ReadByteAt.executor": "Run",
+    "JUnit.CartridgeTest.test_OutOfBoundsRomSizeCodeThrowsException.executor": "Run",
+    "JUnit.DefaultCartridgeTest.executor": "Run",
+    "JUnit.HRAMTest.executor": "Run",
+    "JUnit.MBC1CartridgeTest.executor": "Run",
+    "JUnit.MBC1CartridgeTest.test_MBC1_ReadByteAt_FirstROMBank.executor": "Run",
+    "JUnit.MBC1CartridgeTest.test_ReadByteAt_LowerIndexableROMBanks.executor": "Run",
+    "JUnit.ROMBankTest.executor": "Coverage",
+    "JUnit.ROMBankTest.testConstructor_NullBankContent.executor": "Run",
+    "JUnit.TimerTest.executor": "Run",
+    "JUnit.TimerTest.testAddCyclesForDifferentClockSpeeds.executor": "Run",
+    "JUnit.WRAMTest.executor": "Coverage",
+    "JUnit.WRAMTest.writeByteAt_validAddressAndValue.executor": "Coverage",
+    "JUnit.bus in gb-emulator.executor": "Coverage",
+    "JUnit.emulator in gb-emulator.executor": "Run",
+    "JUnit.emulator.bus.* and 3 more.executor": "Run",
+    "JUnit.emulator.bus.* and 5 more.executor": "Coverage",
+    "JUnit.java in gb-emulator.executor": "Run",
+    "Maven.gb-emulator [compile].executor": "Run",
+    "Maven.gb-emulator [test].executor": "Run",
+    "RunOnceActivity.CodyAccountHistoryMigration": "true",
+    "RunOnceActivity.CodyAccountsIdsRefresh": "true",
+    "RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount": "true",
+    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+    "RunOnceActivity.CodyMigrateChatHistory-v2": "true",
+    "RunOnceActivity.CodyProjectSettingsMigration": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "more-tests",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/bruno/www/projects/gb-emulator/src/test/java/emulator/bus/device",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Global Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="emulator.cpu.instruction" />
@@ -148,7 +149,7 @@
     </key>
   </component>
   <component name="RunManager" selected="JUnit.java in gb-emulator">
-    <configuration name="CartridgeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MBC1CartridgeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
       <extension name="coverage">
         <pattern>
@@ -157,13 +158,13 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="emulator.bus.device.cartridge" />
-      <option name="MAIN_CLASS_NAME" value="emulator.bus.device.cartridge.CartridgeTest" />
+      <option name="MAIN_CLASS_NAME" value="emulator.bus.device.cartridge.MBC1CartridgeTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CartridgeTest.test_General_OutOfBoundsRomSizeCodeThrowsException" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MBC1CartridgeTest.test_MBC1_ReadByteAt_FirstROMBank" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
       <extension name="coverage">
         <pattern>
@@ -172,14 +173,14 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="emulator.bus.device.cartridge" />
-      <option name="MAIN_CLASS_NAME" value="emulator.bus.device.cartridge.CartridgeTest" />
-      <option name="METHOD_NAME" value="test_General_OutOfBoundsRomSizeCodeThrowsException" />
+      <option name="MAIN_CLASS_NAME" value="emulator.bus.device.cartridge.MBC1CartridgeTest" />
+      <option name="METHOD_NAME" value="test_MBC1_ReadByteAt_FirstROMBank" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CartridgeTest.test_MBC1_OutOfBoundsRomSizeCodeThrowsException" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MBC1CartridgeTest.test_ReadByteAt_LowerIndexableROMBanks" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
       <extension name="coverage">
         <pattern>
@@ -188,25 +189,24 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="emulator.bus.device.cartridge" />
-      <option name="MAIN_CLASS_NAME" value="emulator.bus.device.cartridge.CartridgeTest" />
-      <option name="METHOD_NAME" value="test_MBC1_OutOfBoundsRomSizeCodeThrowsException" />
+      <option name="MAIN_CLASS_NAME" value="emulator.bus.device.cartridge.MBC1CartridgeTest" />
+      <option name="METHOD_NAME" value="test_ReadByteAt_LowerIndexableROMBanks" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CartridgeTest.test_NoneCartridge_ReadByteAt" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="emulator.bus.* and 5 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="gb-emulator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="emulator.bus.device.cartridge.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="emulator.bus.device.cartridge" />
-      <option name="MAIN_CLASS_NAME" value="emulator.bus.device.cartridge.CartridgeTest" />
-      <option name="METHOD_NAME" value="test_NoneCartridge_ReadByteAt" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="pattern" />
+      <patterns>
+        <pattern testClass="emulator.bus.*" />
+        <pattern testClass="emulator.bus.device.*" />
+        <pattern testClass="emulator.bus.SimpleBusTest" />
+        <pattern testClass="emulator.cpu.*" />
+        <pattern testClass="emulator.interrupts.*" />
+        <pattern testClass="emulator.utils.*" />
+      </patterns>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -280,10 +280,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.CartridgeTest" />
-      <item itemvalue="JUnit.CartridgeTest.test_General_OutOfBoundsRomSizeCodeThrowsException" />
-      <item itemvalue="JUnit.CartridgeTest.test_MBC1_OutOfBoundsRomSizeCodeThrowsException" />
-      <item itemvalue="JUnit.CartridgeTest.test_NoneCartridge_ReadByteAt" />
+      <item itemvalue="JUnit.MBC1CartridgeTest" />
+      <item itemvalue="JUnit.MBC1CartridgeTest.test_MBC1_ReadByteAt_FirstROMBank" />
+      <item itemvalue="JUnit.MBC1CartridgeTest.test_ReadByteAt_LowerIndexableROMBanks" />
+      <item itemvalue="JUnit.emulator.bus.* and 5 more" />
       <item itemvalue="JUnit.java in gb-emulator" />
       <item itemvalue="Maven.gb-emulator [test]" />
       <item itemvalue="Maven.gb-emulator [compile]" />
@@ -291,10 +291,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.java in gb-emulator" />
-        <item itemvalue="JUnit.CartridgeTest" />
-        <item itemvalue="JUnit.CartridgeTest.test_NoneCartridge_ReadByteAt" />
-        <item itemvalue="JUnit.CartridgeTest.test_General_OutOfBoundsRomSizeCodeThrowsException" />
-        <item itemvalue="JUnit.CartridgeTest.test_MBC1_OutOfBoundsRomSizeCodeThrowsException" />
+        <item itemvalue="JUnit.MBC1CartridgeTest" />
+        <item itemvalue="JUnit.emulator.bus.* and 5 more" />
+        <item itemvalue="JUnit.MBC1CartridgeTest.test_ReadByteAt_LowerIndexableROMBanks" />
+        <item itemvalue="JUnit.MBC1CartridgeTest.test_MBC1_ReadByteAt_FirstROMBank" />
       </list>
     </recent_temporary>
   </component>
@@ -404,7 +404,20 @@
     <MESSAGE value="add .idea" />
     <MESSAGE value="Add TimerTest, more tests to InterruptController" />
     <MESSAGE value="fix import" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix import" />
+    <MESSAGE value="add more tests" />
+    <MESSAGE value="remove IOException" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove IOException" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties>
+            <option name="NOTIFY_CAUGHT" value="false" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
@@ -421,10 +434,11 @@
     <SUITE FILE_PATH="coverage/gb_emulator$CartridgeTest_test_MBC1_OutOfBoundsRomSizeCodeThrowsException.ic" NAME="CartridgeTest.test_MBC1_OutOfBoundsRomSizeCodeThrowsException Coverage Results" MODIFIED="1734464328918" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
       <FILTER>emulator.bus.device.cartridge.*</FILTER>
     </SUITE>
+    <SUITE FILE_PATH="coverage/gb_emulator$emulator_bus___and_5_more.ic" NAME="emulator.bus.* and 5 more Coverage Results" MODIFIED="1734532005287" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/gb_emulator$WRAMTest_writeByteAt_validAddressAndValue.ic" NAME="WRAMTest.writeByteAt_validAddressAndValue Coverage Results" MODIFIED="1734423639209" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
       <FILTER>emulator.bus.device.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/gb_emulator$java_in_gb_emulator.ic" NAME="java in gb-emulator Coverage Results" MODIFIED="1734463901319" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+    <SUITE FILE_PATH="coverage/gb_emulator$java_in_gb_emulator.ic" NAME="java in gb-emulator Coverage Results" MODIFIED="1734467713402" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
     <SUITE FILE_PATH="coverage/gb_emulator$ROMBankTest.ic" NAME="ROMBankTest Coverage Results" MODIFIED="1734431894039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">
       <FILTER>emulator.bus.device.cartridge.*</FILTER>
     </SUITE>

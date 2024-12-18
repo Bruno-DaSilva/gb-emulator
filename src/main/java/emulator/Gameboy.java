@@ -36,7 +36,7 @@ public class Gameboy {
     }
 
     public Gameboy(byte[] romBytes) {
-        this.rom = new Cartridge(romBytes);
+        this.rom = Cartridge.createCartridge(romBytes);
         this.interruptController = new InterruptController();
         this.timer = new Timer(interruptController);
         this.serialHandler = new PrinterSerialHandler();
@@ -75,7 +75,7 @@ public class Gameboy {
           if (this.rom != null) {
               throw new IllegalStateException("Cartridge is already set");
           }
-          this.rom = new Cartridge(romBytes);
+          this.rom = Cartridge.createCartridge(romBytes);
           return this;
       }
 

@@ -2,40 +2,22 @@ package emulator.bus.device.cartridge;
 
 import emulator.bus.device.IBusDevice;
 
-import java.util.Arrays;
+public abstract class Cartridge implements IBusDevice {
+    protected CartridgeType cartridgeType;
+    protected ROMBank bank0;
+    protected ROMBank[] indexableRomBanks;
+    protected int currentActiveRomBank;
+    protected int lowerBankBits;
+    protected int higherBankBits;
 
-public class Cartridge implements IBusDevice {
-    private final CartridgeType cartridgeType;
-    private ROMBank bank0;
-    private ROMBank[] indexableRomBanks;
-    private int currentActiveRomBank;
-    private int lowerBankBits;
-    private int higherBankBits;
-
-    public Cartridge(byte[] romBytes) {
-        bank0 = new ROMBank(Arrays.copyOfRange(romBytes, 0, 0x4000));
-        this.cartridgeType = parseCartridgeType(romBytes);
-
+    public static Cartridge createCartridge(byte[] romBytes) {
+        CartridgeType cartridgeType = parseCartridgeType(romBytes);
         switch (cartridgeType) {
             case NONE -> {
-                int numExtraRomBanks = parseRomSize(romBytes);
-                if (numExtraRomBanks != 1) {
-                    throw new IllegalArgumentException("Only one extra ROM bank supported for no MBC.");
-                }
-                indexableRomBanks = new ROMBank[1];
-                indexableRomBanks[0] = new ROMBank(Arrays.copyOfRange(romBytes, 0x4000, 0x8000));
-                currentActiveRomBank = 0;
+                return new DefaultCartridge(romBytes);
             }
             case MBC1 -> {
-                // (max 2MByte ROM and/or 32 KiB RAM)
-                int numExtraRomBanks = parseRomSize(romBytes);
-                indexableRomBanks = new ROMBank[numExtraRomBanks];
-                for (int i = 0; i < indexableRomBanks.length; ++i) {
-                    int from = 0x4000 * (i + 1);
-                    int to = 0x4000 * (i + 1) + 0x4000;
-                    indexableRomBanks[i] = new ROMBank(Arrays.copyOfRange(romBytes, from, to));
-                }
-                currentActiveRomBank = 0;
+                return new MBC1Cartridge(romBytes);
             }
             default ->
                     throw new IllegalArgumentException("Cartridge does not yet support cartridge type: " + cartridgeType);
@@ -55,7 +37,7 @@ public class Cartridge implements IBusDevice {
      *
      * @return number of extra rom banks in this cartridge
      */
-    private int parseRomSize(byte[] romBytes) {
+    protected int parseRomSize(byte[] romBytes) {
         byte romSizeCode = romBytes[0x0148];
         if (romSizeCode >= 0x00 && romSizeCode <= 0x08) {
             int romSizeInBytes = 32768 * (1 << romSizeCode);
@@ -95,7 +77,7 @@ public class Cartridge implements IBusDevice {
      *  FEh  HuC3
      *  FFh  HuC1+RAM+BATTERY
      */
-    private CartridgeType parseCartridgeType(byte[] romBytes) {
+    protected static CartridgeType parseCartridgeType(byte[] romBytes) {
         return switch (romBytes[0x0147]) {
             case 0x00 ->
                 // No MBC
@@ -144,64 +126,7 @@ public class Cartridge implements IBusDevice {
         };
     }
 
-    public byte readByteAt(int addr) {
-        switch (cartridgeType) {
-            case NONE -> {
-                if (addr < 0x4000) {
-                    return bank0.readByteAt(addr);
-                } else if (addr < 0x8000) {
-                    return indexableRomBanks[currentActiveRomBank].readByteAt(addr - 0x4000);
-                } else {
-                    throw new IndexOutOfBoundsException("Cartridge read address " + String.format("0x%02X", addr) + " exceeds memory");
-                }
-            }
-            case MBC1 -> {
-                if (addr < 0x4000) {
-                    return bank0.readByteAt(addr);
-                } else if (addr < 0x8000) {
-                    return indexableRomBanks[currentActiveRomBank].readByteAt(addr - 0x4000);
-                } else {
-                    throw new IndexOutOfBoundsException("Cartridge read address " + String.format("0x%02X", addr) + " exceeds memory");
-                }
-            }
-            default ->
-                    throw new UnsupportedOperationException("Cartridge does not support banking mode: " + cartridgeType);
-        }
-    }
+    public abstract byte readByteAt(int addr);
 
-    public void writeByteAt(int addr, byte value) {
-        switch (cartridgeType) {
-            case NONE -> throw new IllegalArgumentException("Cannot write to any values with no MBC.");
-            case MBC1 -> {
-                if (addr < 0x2000) {
-                    // ram enable
-                    System.out.println("RAM enable");
-                } else if (addr < 0x4000) {
-                    // Low order (5 bits) ROM Bank number
-                    if ((value & 0b11111) == 0) {
-                        value = 0b00001;
-                    }
-                    lowerBankBits = value & 0b11111;
-                    currentActiveRomBank = (lowerBankBits | (higherBankBits << 5)) - 1;
-//                System.err.print(" Switching to ROM bank " + currentActiveRomBank + " ");
-                } else if (addr < 0x6000) {
-                    // ram bank number OR upper bits of rom bank number
-                    higherBankBits = value & 0b11;
-                    currentActiveRomBank = (lowerBankBits | (higherBankBits << 5)) - 1;
-//                System.err.print(" Switching to ROM bank " + currentActiveRomBank + " ");
-                } else if (addr < 0x8000) {
-                    // banking mode select
-                    if ((value & 0b1) == 0) {
-                        // normal
-                        System.out.println("Banking mode");
-                    } else {
-                        // RAM Banking Mode / Advanced ROM Banking Mode
-                        throw new UnsupportedOperationException("Cartridge does not support advanced banking mode.");
-                    }
-                }
-            }
-            default ->
-                    throw new UnsupportedOperationException("Cartridge does not support banking mode: " + cartridgeType);
-        }
-    }
+    public abstract void writeByteAt(int addr, byte value);
 }
